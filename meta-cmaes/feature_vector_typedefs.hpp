@@ -10,7 +10,7 @@
 
 
 
-const int NUM_BASE_FEATURES = 16; // number of base features
+const int NUM_BASE_FEATURES = 14; // number of base features
 // const int NUM_TOP_CELLS = 15;      // number of cells in the meta-map
 const int NUM_BOTTOM_FEATURES = 2; // number of features for bottom level maps
 const int NUM_GENES = NUM_BASE_FEATURES * NUM_BOTTOM_FEATURES;

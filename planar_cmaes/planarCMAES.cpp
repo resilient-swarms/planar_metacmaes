@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     std::cout << "will do damage " << global::damage_index << std::endl;
 #endif
 
-    global::init_simu(std::string(argv[1]), std::string("armBody.skel"));
+    global::init_simu(std::string(argv[1]), std::string(std::getenv("BOTS_DIR")) + "/share/armBody.skel");
     run_ea(argc, argv, ea);
 
     global::global_robot.reset();

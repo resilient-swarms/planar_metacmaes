@@ -203,7 +203,7 @@ protected:
         // copy of controller's parameters
         _ctrl.clear();
 
-        for (size_t i = 0; i < 24; i++)
+        for (size_t i = 0; i < 8; i++)
             _ctrl.push_back(indiv.data(i));
 
         // launching the simulation

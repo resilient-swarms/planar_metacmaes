@@ -26,7 +26,7 @@ struct RecoveredPerformance
         std::vector<double> _ctrl;
         _ctrl.clear();
 
-        for (size_t i = 0; i < 24; i++)
+        for (size_t i = 0; i < 8; i++)
             _ctrl.push_back(indiv.gen().data(i));
 
 #ifdef GRAPHIC

@@ -25,13 +25,6 @@ def check_dart(conf):
 		if 'RESIBOTS_DIR' in os.environ:
 			includes_check = [os.environ['RESIBOTS_DIR'] + '/include'] + includes_check
 			libs_check = [os.environ['RESIBOTS_DIR'] + '/lib'] + libs_check
-			
-	if 'BOTS_DIR' in os.environ:
-		print "romans gay"
-		includes_check = ['/lyceum/agb1n19/planar_robo/include'] + includes_check
-		libs_check = ['/lyceum/agb1n19/planar_robo/lib'] + libs_check
-	else:
-		print "roman isnt"
 
 	# DART requires some of bullets includes (if installed with bullet enabled)
 	bullet_check = ['/usr/local/include/bullet', '/usr/include/bullet']
