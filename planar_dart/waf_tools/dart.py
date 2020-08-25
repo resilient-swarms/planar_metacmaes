@@ -110,6 +110,7 @@ def check_dart(conf, *k, **kw):
 
     try:
         conf.start_msg('Checking for DART includes (including io/urdf)')
+        print includes_check
         config_file = conf.find_file('dart/config.hpp', includes_check)
         with open(config_file) as f:
             config_content = f.readlines()
