@@ -7,9 +7,9 @@
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/find.hpp>
 
-#include "~/planar_robo/include/dart/dart.hpp"
-#include "~/planar_robo/include/dart/collision/dart/DARTCollisionDetector.hpp"
-#include "~/planar_robo/include/dart/math/Constants.hpp"
+#include "../../../../planar_robo/include/dart/dart.hpp"
+#include "../../../../planar_robo/include/dart/collision/dart/DARTCollisionDetector.hpp"
+#include "../../../../planar_robo/include/dart/math/Constants.hpp"
 
 #include <Eigen/Core>
 #include <planar_dart/planar.hpp>
@@ -21,7 +21,7 @@
 #include <cstdlib>
 
 #ifdef GRAPHIC
-#include "~/planar_robo/include/dart/gui/osg/osg.hpp"
+#include "../../../../planar_robo/include/dart/gui/osg/osg.hpp"
 #endif
 
 #define JOINT_SIZE 8

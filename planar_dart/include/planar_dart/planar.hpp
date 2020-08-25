@@ -9,8 +9,8 @@
 #include <fstream>
 #include <streambuf>
 
-#include "~/planar_robo/include/dart/utils/SkelParser.hpp"
-#include "~/planar_robo/include/dart/utils/sdf/SdfParser.hpp"
+#include "../../../../planar_robo/include/dart/utils/SkelParser.hpp"
+#include "../../../../planar_robo/include/dart/utils/sdf/SdfParser.hpp"
 
 #define JOINT_SIZE 8
 
