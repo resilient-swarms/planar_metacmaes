@@ -24,7 +24,7 @@ for method in $2; do
       Outfolder="${DEST}/${method_tag}/exp${replicate}"
       echo "will write to ${Outfolder}"
 
-      nohup ${SFERES_DIR}/build/exp/MAP-Elites-Rhex/train_${binary_tag}_binary --load ${Outfolder}/gen_${last_gen} --d ${Outfolder} -o ${Outfolder}/${test_type}_trainperformance &
+      nohup ${SFERES_DIR}/build/exp/planar_cmaes/train_${binary_tag}_binary --load ${Outfolder}/gen_${last_gen} --d ${Outfolder} -o ${Outfolder}/${test_type}_trainperformance &
     done
 
   done

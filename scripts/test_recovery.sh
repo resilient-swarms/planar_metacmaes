@@ -32,10 +32,10 @@ for method in $2; do
         Outfolder=${Outfolder}/damage${damage_number}
         mkdir -p ${Outfolder}
         echo "will write to ${Outfolder}"
-        ${SFERES_DIR}/build/exp/MAP-Elites-Rhex/test_${binary_tag}_binary ${replicate} ${damage_number} --d ${Outfolder}
+        ${SFERES_DIR}/build/exp/planar_cmaes/test_${binary_tag}_binary ${replicate} ${damage_number} --d ${Outfolder}
       else
         echo "will write to ${Outfolder}"
-        ${SFERES_DIR}/build/exp/MAP-Elites-Rhex/test_${binary_tag}_binary --load ${Outfolder}/gen_${last_gen} --d ${Outfolder} -o ${Outfolder}/${test_type}_performance
+        ${SFERES_DIR}/build/exp/planar_cmaes/test_${binary_tag}_binary --load ${Outfolder}/gen_${last_gen} --d ${Outfolder} -o ${Outfolder}/${test_type}_performance
       fi
     done
 

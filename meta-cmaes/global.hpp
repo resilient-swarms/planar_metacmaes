@@ -63,23 +63,35 @@ std::vector<std::shared_ptr<planar_dart::planar>> damaged_robots;
 std::vector<std::vector<planar_dart::planarDamage>> damage_sets;
 void init_damage(std::string seed, std::string robot_file)
 {
-    std::string damage_type = "stuck_at45";
+    std::string damage_type = "stuck_at_45";
     std::seed_seq seed2(seed.begin(), seed.end());
-    std::mt19937 gen(seed2);
+    std::mt19937 gen(seed2); 
     std::cout << "damage sets :" << std::endl;
     std::ofstream ofs("damage_sets_" + seed + ".txt");
-    //change the damages
-    
+
     for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
     {
         std::cout << damage_type << "," << leg << "\n";
         ofs << damage_type << "," << leg << "\n";
-
+#ifndef TAKE_COMPLEMENT
         damage_sets.push_back({planar_dart::planarDamage(damage_type.c_str(), std::to_string(leg).c_str())}); 
-
+#endif
     }
     std::cout << std::endl;
-
+#ifdef TAKE_COMPLEMENT
+    damage_type = "stuck_at_minus45";
+    ofs << "test:" << std::endl;
+    for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
+    {
+        std::cout << damage_type << "," << leg << "\n";
+        ofs << damage_type << "," << leg << "\n";
+        damage_sets.push_back({planar_dart::planarDamage(damage_type.c_str(), std::to_string(leg).c_str())}); 
+    }
+    std::cout << std::endl;
+#if CMAES_CHECK()
+	std::cout << "will do damage " << global::damage_index << ": " << damage_sets[global::damage_index][0].type << ", " << damage_sets[global::damage_index][0].data << std::endl;
+#endif
+#endif
     for (size_t i = 0; i < global::damage_sets.size(); ++i)
     {
         global::damaged_robots.push_back(std::make_shared<planar_dart::planar>(robot_file, "planar", false, global::damage_sets[i])); // we repeat this creation process for damages
