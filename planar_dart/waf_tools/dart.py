@@ -35,16 +35,12 @@ def check_dart(conf, *k, **kw):
     else:
         includes_check = ['/usr/local/include', '/usr/include']
         libs_check = ['/usr/local/lib', '/usr/local/lib64', '/usr/lib', '/usr/lib64', '/usr/lib/x86_64-linux-gnu/']
-
-    if 'BOTS_DIR' in os.environ:
-        print "romans gay"
-        #includes_check = [os.environ['BOTS_DIR'] + '/include'] + includes_check
-        #libs_check = [os.environ['BOTS_DIR'] + '/lib'] + libs_check
-        includes_check = ['/lyceum/agb1n19/planar_robo/include'] + includes_check
-        libs_check = ['/lyceum/agb1n19/planar_robo/lib'] + libs_check
-        
-    else:
-        print "roman isnt"
+	if 'BOTS_DIR' in os.environ:
+		print "romans gay"
+		includes_check = ['/lyceum/agb1n19/planar_robo/include'] + includes_check
+		libs_check = ['/lyceum/agb1n19/planar_robo/lib'] + libs_check
+	else:
+		print "roman isnt"
 
     # DART requires assimp library
     assimp_include = []
@@ -113,7 +109,6 @@ def check_dart(conf, *k, **kw):
 
     try:
         conf.start_msg('Checking for DART includes (including io/urdf)')
-        print includes_check
         config_file = conf.find_file('dart/config.hpp', includes_check)
         with open(config_file) as f:
             config_content = f.readlines()
