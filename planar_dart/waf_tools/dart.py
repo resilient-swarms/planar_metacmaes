@@ -38,8 +38,11 @@ def check_dart(conf, *k, **kw):
 
     if 'BOTS_DIR' in os.environ:
         print "romans gay"
-        includes_check = [os.environ['BOTS_DIR'] + '/include'] + includes_check
-        libs_check = [os.environ['BOTS_DIR'] + '/lib'] + libs_check
+        #includes_check = [os.environ['BOTS_DIR'] + '/include'] + includes_check
+        #libs_check = [os.environ['BOTS_DIR'] + '/lib'] + libs_check
+        includes_check = ['/lyceum/agb1n19/planar_robo/include'] + includes_check
+        libs_check = ['/lyceum/agb1n19/planar_robo/lib'] + libs_check
+        
     else:
         print "roman isnt"
 
