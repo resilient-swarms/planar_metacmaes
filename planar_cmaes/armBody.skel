@@ -3,7 +3,7 @@
 	<skeleton name="planar">
 	    <body name="link_1">
 		<transformation>0 0 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -21,7 +21,7 @@
 	    </body>
 	    <body name="link_2">
 		<transformation>0 -0.0775 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -39,7 +39,7 @@
 	    </body>
 	    <body name="link_3">
 		<transformation>0 -0.155 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -57,7 +57,7 @@
 	    </body>
 	    <body name="link_4">
 		<transformation>0 -0.2325 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -75,7 +75,7 @@
 	    </body>
 	    <body name="link_5">
 		<transformation>0 -0.31 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -93,7 +93,7 @@
 	    </body>
 	    <body name="link_6">
 		<transformation>0 -0.3875 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -111,7 +111,7 @@
 	    </body>
 	    <body name="link_7">
 		<transformation>0 -0.465 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>
@@ -129,7 +129,7 @@
 	    </body>
 	    <body name="link_8">
 		<transformation>0 -0.5425 0 0 0 0</transformation>
-		<gravity>0.0</gravity>
+		<gravity>0</gravity>
 		<collision_shape>
 		    <geometry>
 		        <box>

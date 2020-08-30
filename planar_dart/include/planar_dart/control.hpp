@@ -108,15 +108,15 @@ namespace planar_dart {
 
         }
         double toNormalise(double angle){
-            double MAX = PI/2;
-            double MIN = 0.0 - PI/2;
+            double MAX = (PI/2.0);
+            double MIN = 0.0 - (PI/2.0);
 
             return (angle - MIN)/(MAX - MIN);
         }
 
         double toRadians(double val){
-            double MAX = PI/2;
-            double MIN = 0.0 - PI/2;
+            double MAX = (PI/2.0);
+            double MIN = 0.0 - (PI/2.0);
 
             return ((MAX - MIN) * val) + MIN;
         }

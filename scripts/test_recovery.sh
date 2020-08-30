@@ -35,6 +35,7 @@ for method in $2; do
         ${SFERES_DIR}/build/exp/planar_cmaes/test_${binary_tag}_binary ${replicate} ${damage_number} --d ${Outfolder}
       else
         echo "will write to ${Outfolder}"
+	mkdir -p ${Outfolder}/gen_${last_gen}
         ${SFERES_DIR}/build/exp/planar_cmaes/test_${binary_tag}_binary --load ${Outfolder}/gen_${last_gen} --d ${Outfolder} -o ${Outfolder}/${test_type}_performance
       fi
     done

@@ -8,6 +8,7 @@
 
 #if META()
 #include <meta-cmaes/params.hpp>
+#include <sferes/ea/cmaes_interface.h>
 #endif
 
 #define JOINT_SIZE 8
@@ -145,6 +146,7 @@ void init_simu(std::string seed, std::string robot_file)
 }
 
 #if META()
+cmaes_t evo;
 struct SampledDataEntry
 {
     std::vector<size_t> genotype;

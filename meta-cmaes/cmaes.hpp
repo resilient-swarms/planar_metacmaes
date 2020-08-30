@@ -43,54 +43,72 @@
 #include <sferes/parallel.hpp>
 #include <sferes/ea/cmaes_interface.h>
 
-namespace sferes {
+void resume_distr(char *filename)
+{
+  //
+  std::cout << "will resume " << filename << std::endl;
+  cmaes_resume_distribution(&global::evo, filename);
+  std::cout << "resumed cmaes" << std::endl;
+}
 
-  namespace ea {
+namespace sferes
+{
 
-    SFERES_EA(Cmaes, Ea) {
+  namespace ea
+  {
+
+    SFERES_EA(Cmaes, Ea)
+    {
     public:
-      Cmaes() {
-        _ar_funvals = cmaes_init(&_evo, dim, NULL,NULL, 0, Params::pop::size, NULL);// modified here: use of custom population size
-        _lambda = cmaes_Get(&_evo, "lambda"); // default lambda (pop size)
+      Cmaes()
+      {
+        _ar_funvals = cmaes_init(&global::evo, dim, NULL, NULL, 0, Params::pop::size, NULL); // modified here: use of custom population size
+        _lambda = cmaes_Get(&global::evo, "lambda");                                         // default lambda (pop size)
       }
-      ~Cmaes() {
-        cmaes_exit(&_evo);
+      ~Cmaes()
+      {
+        cmaes_exit(&global::evo);
       }
-      void random_pop() {
+      void random_pop()
+      {
         // we don't really need the random here
         this->_pop.resize(_lambda);
-        BOOST_FOREACH(boost::shared_ptr<Phen>&indiv, this->_pop) {
+        BOOST_FOREACH (boost::shared_ptr<Phen> &indiv, this->_pop)
+        {
           indiv = boost::shared_ptr<Phen>(new Phen());
         }
       }
-      void epoch() {
-        _cmaes_pop = cmaes_SamplePopulation(&_evo);
+      void epoch()
+      {
+        _cmaes_pop = cmaes_SamplePopulation(&global::evo);
         // copy pop
         for (size_t i = 0; i < this->_pop.size(); ++i)
         {
-          for (size_t j = 0; j < this->_pop[i]->size(); ++j) {  
-            _cmaes_pop[i][j] = std::max(0.0,std::min(1.0,_cmaes_pop[i][j]));// modified: truncate to [0,1]
-            this->_pop[i]->gen().data(j,_cmaes_pop[i][j]);
+          for (size_t j = 0; j < this->_pop[i]->size(); ++j)
+          {
+            _cmaes_pop[i][j] = std::max(0.0, std::min(1.0, _cmaes_pop[i][j])); // modified: truncate to [0,1]
+            this->_pop[i]->gen().data(j, _cmaes_pop[i][j]);
           }
-          this->_pop[i]->develop();// modified braces here: no need to develop the genotype multiple times
+          this->_pop[i]->develop(); // modified braces here: no need to develop the genotype multiple times
         }
         // eval
         this->_eval_pop(this->_pop, 0, this->_pop.size());
         this->apply_modifier();
-        for (size_t i = 0; i < this->_pop.size(); ++i) {
+        for (size_t i = 0; i < this->_pop.size(); ++i)
+        {
           //warning: CMAES minimizes the fitness...
-          _ar_funvals[i] = - this->_pop[i]->fit().value();
+          _ar_funvals[i] = -this->_pop[i]->fit().value();
         }
         //
-        cmaes_UpdateDistribution(&_evo, _ar_funvals);
+        cmaes_UpdateDistribution(&global::evo, _ar_funvals);
       }
+
     protected:
       SFERES_CONST size_t dim = Phen::gen_t::gen_size;
-      cmaes_t _evo;
       double *_ar_funvals;
-      double * const * _cmaes_pop;
+      double *const *_cmaes_pop;
       int _lambda;
     };
-  }
-}
+  } // namespace ea
+} // namespace sferes
 #endif

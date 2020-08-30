@@ -79,7 +79,7 @@ namespace planar_dart {
 
         planarDARTSimu(const std::vector<double>& ctrl, robot_t robot, std::vector<planar_dart::planarDamage> damages = {}) : _euclidean_distance(10000),
                                                                           _world(std::make_shared<dart::simulation::World>()),
-                                                                          _controller(ctrl, robot, damages),
+                                                                          //_controller(ctrl, robot, damages),
                                                                           _old_index(0),
                                                                           _desc_period(2),
                                                                           _break(false),
@@ -90,11 +90,10 @@ namespace planar_dart {
 
             // set position of rhex
             _robot->skeleton()->setPosition(0, 0);
-           
 
             _world->addSkeleton(_robot->skeleton());
-            _world->setTimeStep(1);
-            //_world->setTimeStep(0.05);
+            //_world->setTimeStep(1);
+            _world->setTimeStep(0.05);
 
 
             add_wall();
