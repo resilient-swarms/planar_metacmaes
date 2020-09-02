@@ -92,11 +92,12 @@ namespace planar_dart {
             _robot->skeleton()->setPosition(0, 0);
 
             _world->addSkeleton(_robot->skeleton());
-            //_world->setTimeStep(1);
-            _world->setTimeStep(0.05);
+            _world->setTimeStep(1);
+            //_world->setTimeStep(0.05);
 
 
             add_wall();
+            _controller.set_robot(robot);
             _controller.set_parameters(ctrl);
 
             _controller.update();

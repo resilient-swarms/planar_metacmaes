@@ -29,6 +29,10 @@ namespace planar_dart {
             set_parameters(ctrl);
         }
 
+        void set_robot(robot_t r){
+            _robot = r;
+        }
+
         void set_parameters(const std::vector<double>& ctrl)
         {
             std::vector<double>::const_iterator first = ctrl.begin();
