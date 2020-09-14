@@ -109,7 +109,6 @@ namespace planar_dart {
             _osg_world_node = new dart::gui::osg::WorldNode(_world);
             _osg_viewer.addWorldNode(_osg_world_node);
             _osg_viewer.setUpViewInWindow(0, 0, 640, 480);
-
             // full-screen
             // _osg_viewer.setUpViewOnSingleScreen();
 #endif
@@ -155,6 +154,7 @@ namespace planar_dart {
 #ifdef GRAPHIC
                 fixed_camera();
                 _osg_viewer.frame();
+                //_osg_viewer.captureScreen("c.png");
 #endif
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
@@ -194,11 +194,11 @@ namespace planar_dart {
         {
             view_setting = view;
             switch(0){
-                case 0: _camera_pos = Eigen::Vector3d(-0.5, -0.5, 0.5);
+                case 0: _camera_pos = Eigen::Vector3d(-1, -1, 1);
                     _look_at = Eigen::Vector3d(0, 0, 0);
                     _camera_up = Eigen::Vector3d(0, 0, 1);
                     break;
-                case 1: _camera_pos = Eigen::Vector3d(-0.5, -0.5, 0.5);
+                case 1: _camera_pos = Eigen::Vector3d(-1, -1, 1);
                     _look_at = Eigen::Vector3d(0, -0.25, 0);
                     _camera_up = Eigen::Vector3d(0, 1, 0);
                     break;
