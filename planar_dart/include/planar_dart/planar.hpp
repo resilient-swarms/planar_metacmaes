@@ -61,6 +61,10 @@ namespace planar_dart {
 
         }
 
+        ~planar(){
+
+        }
+
         std::shared_ptr<planar> clone() const
         {
             // safely clone the skeleton
@@ -276,16 +280,16 @@ namespace planar_dart {
 
         void _set_gripper() {
             std::string gripper_index = "link_8";
-            _gripper_body = _skeleton->getBodyNode(gripper_index)->createMarker();
+            _gripper_body = (_skeleton->getMarker(std::string("gripMarker"))==NULL)?_skeleton->getBodyNode(gripper_index)->createMarker(std::string("gripMarker")):_skeleton->getMarker(std::string("gripMarker"));
 
-            _joint_1_marker = _skeleton->getBodyNode("link_1")->createMarker();
-            _joint_2_marker = _skeleton->getBodyNode("link_2")->createMarker();
-            _joint_3_marker = _skeleton->getBodyNode("link_3")->createMarker();
-            _joint_4_marker = _skeleton->getBodyNode("link_4")->createMarker();
-            _joint_5_marker = _skeleton->getBodyNode("link_5")->createMarker();
-            _joint_6_marker = _skeleton->getBodyNode("link_6")->createMarker();
-            _joint_7_marker = _skeleton->getBodyNode("link_7")->createMarker();
-            _joint_8_marker = _skeleton->getBodyNode("link_8")->createMarker();
+            _joint_1_marker = (_skeleton->getMarker(std::string("oneMarker"))==NULL)?_skeleton->getBodyNode("link_1")->createMarker(std::string("oneMarker")):_skeleton->getMarker(std::string("oneMarker"));
+            _joint_2_marker = (_skeleton->getMarker(std::string("twoMarker"))==NULL)?_skeleton->getBodyNode("link_2")->createMarker(std::string("twoMarker")):_skeleton->getMarker(std::string("twoMarker"));
+            _joint_3_marker = (_skeleton->getMarker(std::string("threeMarker"))==NULL)?_skeleton->getBodyNode("link_3")->createMarker(std::string("threeMarker")):_skeleton->getMarker(std::string("threeMarker"));
+            _joint_4_marker = (_skeleton->getMarker(std::string("fourMarker"))==NULL)?_skeleton->getBodyNode("link_4")->createMarker(std::string("fourMarker")):_skeleton->getMarker(std::string("fourMarker"));
+            _joint_5_marker = (_skeleton->getMarker(std::string("fiveMarker"))==NULL)?_skeleton->getBodyNode("link_5")->createMarker(std::string("fiveMarker")):_skeleton->getMarker(std::string("fiveMarker"));
+            _joint_6_marker = (_skeleton->getMarker(std::string("sixMarker"))==NULL)?_skeleton->getBodyNode("link_6")->createMarker(std::string("sixMarker")):_skeleton->getMarker(std::string("sixMarker"));
+            _joint_7_marker = (_skeleton->getMarker(std::string("sevenMarker"))==NULL)?_skeleton->getBodyNode("link_7")->createMarker(std::string("sevenMarker")):_skeleton->getMarker(std::string("sevenMarker"));
+            _joint_8_marker = (_skeleton->getMarker(std::string("eightMarker"))==NULL)?_skeleton->getBodyNode("link_8")->createMarker(std::string("eightMarker")):_skeleton->getMarker(std::string("eightMarker"));
         }
 
         dart::dynamics::SkeletonPtr _skeleton;
