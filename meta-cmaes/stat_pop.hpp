@@ -214,7 +214,7 @@ namespace sferes
                 std::cout << "writing..." << ea.gen() << prefix << std::endl;
                 std::string fname = ea.res_dir() + "/" + boost::lexical_cast<std::string>(ea.gen()) + prefix + std::string(".dat");
 
-                std::ofstream ofs(fname.c_str());
+                std::ofstream ofs(fname.c_str(), std::ios_base::app);
                 for (size_t k = 0; k < global::database.size(); ++k)
                 {
                     ofs << global::database[k].base_features << "\t" << global::database[k].fitness << std::endl;
@@ -228,7 +228,7 @@ namespace sferes
                 std::cout << "writing..." << prefix << ea.gen() << std::endl;
                 std::string fname = ea.res_dir() + "/" + prefix + boost::lexical_cast<std::string>(ea.gen()) + std::string(".dat");
 
-                std::ofstream ofs(fname.c_str());
+                std::ofstream ofs(fname.c_str(), std::ios_base::app);
                 for (size_t k = 0; k < _pop.size(); ++k)
                 {
                     ofs << _pop[k]->fit().value() << "\t";

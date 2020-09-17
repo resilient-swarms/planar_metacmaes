@@ -53,8 +53,9 @@ namespace planar_dart {
 
             void get(std::vector<double>& results)
             {
-                results.push_back(_x);
-                results.push_back(_y);
+                results.clear();
+                results.push_back(_x<=0.0?0.0:_x);
+                results.push_back(_y<=0.0?0.0:_y);
             }
 
         protected:
@@ -88,8 +89,9 @@ namespace planar_dart {
 
             void get(std::vector<double>& results)
             {
-                results.push_back(_theta);
-                results.push_back(_d);
+                results.clear();
+                results.push_back(_theta<=0.0?0.0:_theta);
+                results.push_back(_d<=0.0?0.0:_d);
             }
 
         protected:
@@ -121,7 +123,8 @@ namespace planar_dart {
                     //auto gripper_body = rob->gripper();
                     //Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                     double a = toNormalise(getRAngle(_base[0], _base[1], _posi_r[0], _posi_r[1], _posi[0], _posi[1]));
-                    _angles.push_back(a<0?0.0:a);
+                    _angles.push_back(a<=0?0.0:a);
+                    //_angles.push_back(a);
                     /*auto bod = rob->skeleton()->getJoint(gripper_index);
 
                     _angles.push_back(atan(bod.getPosition(1) / bod.getPosition(0)));*/
@@ -133,6 +136,7 @@ namespace planar_dart {
 
             void get(std::vector<double>& results)
             {
+                results.clear();
                 results = _angles;
             }
 
@@ -140,8 +144,8 @@ namespace planar_dart {
             std::vector<double> _angles;
             double factor = 0.5425;
             double toNormalise(double angle){
-                double MAX = (PI/4.0);
-                double MIN = 0.0 - (PI/4.0);
+                double MAX = (PI/2.0);
+                double MIN = 0.0 - (PI/2.0);
 
                 return (angle - MIN)/(MAX - MIN);
             }
@@ -149,6 +153,7 @@ namespace planar_dart {
             double P3X, double P3Y){
                 double numerator = P2Y*(P1X-P3X) + P1Y*(P3X-P2X) + P3Y*(P2X-P1X);
                 double denominator = (P2X-P1X)*(P1X-P3X) + (P2Y-P1Y)*(P1Y-P3Y);
+                if(denominator == 0) return 0.0;
                 double ratio = numerator/denominator;
 
                 double angle = atan(ratio);
@@ -176,6 +181,7 @@ namespace planar_dart {
 
             void get(std::vector<double>& results)
             {
+                results.clear();
                 results = _sum_angles;
             }
 

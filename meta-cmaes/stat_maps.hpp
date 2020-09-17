@@ -99,7 +99,7 @@ public:
         std::cout << "writing..." << prefix << ea.gen() << std::endl;
         std::string fname = ea.res_dir() + "/" + boost::lexical_cast<std::string>(ea.gen()) + prefix + std::string(".dat");
 
-        std::ofstream ofs(fname.c_str());
+        std::ofstream ofs(fname.c_str(), std::ios_base::app);
 
         size_t offset = 0;
         for (const bottom_indiv_t *i = array.data(); i < (array.data() + array.num_elements()); ++i)

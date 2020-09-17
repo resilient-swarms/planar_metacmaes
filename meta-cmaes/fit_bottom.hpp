@@ -252,16 +252,16 @@ protected:
     /* the included descriptors determine the base-features */
     void get_base_features(base_features_t & base_features, simulator_t & simu)
     {
-
         std::vector<double> results;
         simu.get_descriptor<planar_dart::descriptors::PositionalCoord, std::vector<double>>(results);
-
+        //std::cout << "Pos Size " << results.size() << std::endl;
         for (size_t i = 0; i < results.size(); ++i)
         {
             base_features(i, 0) = results[i];
         }
         size_t offset = results.size();
         simu.get_descriptor<planar_dart::descriptors::PolarCoord, std::vector<double>>(results);
+        //std::cout << "Pol Size " << results.size() << std::endl;
         for (size_t i = 0; i < results.size(); ++i)
         {
             base_features(i + offset, 0) = results[i];
@@ -270,17 +270,22 @@ protected:
         offset += results.size();
 
         simu.get_descriptor<planar_dart::descriptors::ResultantAngle, std::vector<double>>(results);
+        //std::cout << "RA Size " << results.size() << std::endl;
         for (size_t i = 0; i < results.size(); ++i)
         {
             base_features(i + offset, 0) = results[i];
         }
 
-        offset += results.size();
+        offset += results.size(); 
+
+        //std::cout << "val " << offset + results.size() << std::endl;
         simu.get_descriptor<planar_dart::descriptors::AngleSum, std::vector<double>>(results);
+        //std::cout << "AS Size " << results.size() << std::endl;
         for (size_t i = 0; i < results.size(); ++i)
         {
             base_features(i + offset, 0) = results[i];
         }
+        //std::cout << "val2 " << offset + results.size() << std::endl;
         //std::cout << "W" << std::endl;
         //std::cout << base_features<< std::endl;
     }

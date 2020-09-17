@@ -235,7 +235,7 @@ protected:
     {
         std::cout << "writing..." << prefix << ea.gen() << std::endl;
         std::string fname = ea.res_dir() + "/" + prefix + boost::lexical_cast<std::string>(ea.gen()) + std::string(".dat");
-        std::ofstream ofs(fname.c_str());
+        std::ofstream ofs(fname.c_str(), std::ios_base::app);
 
         for (const phen_t *i = array.data(); i < (array.data() + array.num_elements()); ++i)
         {
@@ -270,7 +270,7 @@ protected:
         std::cout << "writing..." << prefix << ea.gen() << std::endl;
         std::string fname = ea.res_dir() + "/" + prefix + boost::lexical_cast<std::string>(ea.gen()) + std::string(".dat");
 
-        std::ofstream ofs(fname.c_str());
+        std::ofstream ofs(fname.c_str(), std::ios_base::app);
 
         size_t offset = 0;
         for (const phen_t *i = array.data(); i < (array.data() + array.num_elements()); ++i)

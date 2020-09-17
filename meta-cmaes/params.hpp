@@ -20,7 +20,7 @@ struct BottomParams
     // grid properties, discretise 3 dimensions into 10 bins each
     struct ea
     {
-#if RA_C()
+#if RA_C() || META()
         SFERES_CONST size_t behav_dim = 4;
         SFERES_ARRAY(size_t, behav_shape, 8, 8, 8, 8); // 4096 cells for each bottom-level map // 4096 cells for each bottom-level map
 #elif AS_C()
