@@ -273,7 +273,7 @@ namespace planar_dart {
         {
             _stuck_joints.clear();
             _damages = damages;
-            for (auto dmg : _damages) {
+            /*for (auto dmg : _damages) {
                 if (dmg.type == "stuck_at_45") {
                     for (size_t i = 0; i < dmg.data.size(); i++) {
                         int l = dmg.data[i] - '0';
@@ -290,7 +290,7 @@ namespace planar_dart {
                         lock_single_joint(l);
                     }
                 }
-            }
+            }*/
 
             std::sort(_stuck_joints.begin(), _stuck_joints.end());
         }
