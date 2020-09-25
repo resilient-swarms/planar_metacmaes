@@ -274,7 +274,15 @@ namespace planar_dart {
             _stuck_joints.clear();
             _damages = damages;
             for (auto dmg : _damages) {
-                if (dmg.type == "stuck_at45") {
+                if (dmg.type == "stuck_at_45") {
+                    for (size_t i = 0; i < dmg.data.size(); i++) {
+                        int l = dmg.data[i] - '0';
+                        _stuck_joints.push_back(l);
+
+                        lock_single_joint(l);
+                    }
+                }
+                if (dmg.type == "stuck_at_minus45") {
                     for (size_t i = 0; i < dmg.data.size(); i++) {
                         int l = dmg.data[i] - '0';
                         _stuck_joints.push_back(l);

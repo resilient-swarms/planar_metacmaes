@@ -50,9 +50,13 @@ namespace planar_dart {
 
             int leg = 0;
             for (auto dmg : _damages) {
-                if (dmg.type == "stuck_at45") {
+                if (dmg.type == "stuck_at_45") {
                     _leg_count -= 1;
                     _removed_legs.push_back(stoi(dmg.data));
+                }
+                else if (dmg.type == "stuck_at_minus45") {
+                    _leg_count -= 1;
+                    _removed_legs_test.push_back(stoi(dmg.data));
                 }
 
                 leg+=1;
@@ -94,17 +98,22 @@ namespace planar_dart {
             for (size_t i = 0; i < JOINT_COUNT; ++i)
             {
                 // for those legs not removed, add the command
-                if (!std::binary_search(_removed_legs.begin(), _removed_legs.end(), i))
+                if (std::binary_search(_removed_legs.begin(), _removed_legs.end(), i))
                 {
                     //tcommands[i] = values[i];
-                    commands[i] = toRadians(values[i]);
+                    commands[i] = STUCK;
                 }
 
                 // indicate removed legs with an stuck value 
-                else
+                else if(std::binary_search(_removed_legs_test.begin(), _removed_legs_test.end(), i))
                 {
                     //tcommands[i] = STUCK;
-                    commands[i] = STUCK;
+                    commands[i] = -1.0*STUCK;
+                }
+                else 
+                {
+                    //tcommands[i] = values[i];
+                    commands[i] = toRadians(values[i]);
                 }
             }
 
@@ -130,6 +139,7 @@ namespace planar_dart {
         robot_t _robot;
         std::vector<planarDamage> _damages;
         std::vector<int> _removed_legs;
+        std::vector<int> _removed_legs_test;
         int _leg_count;
     };
 }
