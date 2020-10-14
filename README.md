@@ -1,6 +1,6 @@
 # planar_metacmaes
 
-Analysis of learning behaviour-performances with Meta-Evolution (Usinf 8-joint planar robot) 
+Analysis of learning behaviour-performances with Meta-Evolution (Using 8-joint planar robot) 
 
 ## Setting the environment
 
