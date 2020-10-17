@@ -60,12 +60,10 @@ cd ${TEMP_DIR}/planar_metacmaes/planar_dart/
 
 cp -r ${TEMP_DIR}/planar_metacmaes/planar_cmaes/armBody.skel ${BOTS_DIR}/share/armBody.skel
 ```
-- Clone [META-CMAES](https://github.com/bossdm/meta-cmaes) Library and copy `meta-cmaes` dir to environment includes:
+- Clone [META-CMAES](https://github.com/resilient-swarms/meta-cmaes) Library and copy `meta-cmaes` dir to environment includes:
 ```
-cd ${TEMP_DIR}/planar_metacmaes/extras/
-git clone https://github.com/bossdm/meta-cmaes.git
-
-cp -r ${TEMP_DIR}/planar_metacmaes/extras/meta-cmaes/ ${BOTS_DIR}/include
+cd ${BOTS_DIR}/include
+git clone https://github.com/resilient-swarms/meta-cmaes.git
 ```
 - Replace changed `meta_cmaes` files for planar robot using:
 ```
