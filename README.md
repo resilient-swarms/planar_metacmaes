@@ -67,7 +67,7 @@ git clone https://github.com/bossdm/meta-cmaes.git
 
 cp -r ${TEMP_DIR}/planar_metacmaes/extras/meta-cmaes/ ${BOTS_DIR}/include
 ```
-- Copy meta_cmaes changed files for planar adapter:
+- Replace changed `meta_cmaes` files for planar robot using:
 ```
 cp -r ${TEMP_DIR}/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
 ```
