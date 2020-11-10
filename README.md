@@ -74,21 +74,21 @@ cp -r ${TEMP_DIR}/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
 cd ${SFERES_DIR}
 git clone https://github.com/sferes2/sferes2.git
 
-cd ${SFERES_DIR}/sferes2/modules
+cd ${SFERES_DIR}/modules
 git clone https://github.com/resilient-swarms/map_elites.git
 
-cd ${SFERES_DIR}/sferes2
+cd ${SFERES_DIR}
 ./waf configure
 ./waf
 ```
 - Create Experiment Folder and Copy `planar_metacmaes`
 ```
-cd ${SFERES_DIR}/sferes2 && mkdir -p exp && cd exp
-cp -r ${TEMP_DIR}/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/sferes2/exp
+cd ${SFERES_DIR} && mkdir -p exp && cd exp
+cp -r ${TEMP_DIR}/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
 ```
 - Testing Installation can be done by`:
 ```
-cd ${SFERES_DIR}/sferes2
+cd ${SFERES_DIR}
 ./waf configure --exp planar_cmaes
 ./waf --exp planar_cmaes
 ```
@@ -110,7 +110,7 @@ cd ${SFERES_DIR}/sferes2
   
   * `BUILD_TEST`: If True, builds test binaries
   
-- To compile, use `bash ${TEMP_DIR}/planar_cmaes/scripts/make.sh` (**NOTE**: Use only if [this line](https://github.com/agb1n19/planar_metacmaes/README.md#L95) is already executed)
+- To compile, use `bash ${TEMP_DIR}/planar_metacmaes/scripts/make.sh` (**NOTE**: Use only if [this line](https://github.com/agb1n19/planar_metacmaes/README.md#L95) is already executed)
 
 - To run binaries, use `${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${type}_binary ${replicate_number} --d ${RESULTS_DIR}/${type}/exp${replicate_number} >> ${logfile}`,
   * `type` can be `damage_meta`, `random`, `pol`, `pos`, `ra` or `as`

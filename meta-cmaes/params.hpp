@@ -62,7 +62,7 @@ struct BottomParams
         // filling up all or even half of the cells is quite unlikely though , so not too many worries for the damage case !
 
         // NOTE: do NOT multiply by 2 to get initial size
-        SFERES_CONST unsigned init_size = 2000;
+        SFERES_CONST unsigned init_size = 5;
         ; //initial population for all maps
         SFERES_CONST int initial_aleat = 1;
     };

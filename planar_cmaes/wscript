@@ -84,7 +84,7 @@ def _build_evolution(bld):
 								use = 'sferes2',
 								uselib = libs,
 								target = 'planarCMAES_'+c,
-								cxxflags = cxxflags + ['-march=native',"-DEXPERIMENT_TYPE="+str(1+i),"-DNUM_CORES="+str(num_cores)],   # -march=native
+								cxxflags = cxxflags + ['-g','-march=native',"-DEXPERIMENT_TYPE="+str(1+i),"-DNUM_CORES="+str(num_cores)],   # -march=native
 								variants = ['BINARY'])
 def build(bld):
 	

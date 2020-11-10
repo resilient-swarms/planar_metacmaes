@@ -42,7 +42,11 @@
 //#define PRINTING
 //#define CHECK_PARALLEL
 #ifndef TEST
-#define PARALLEL_RUN
+#if NUM_CORES > 1
+    #define PARALLEL_RUN
+#else
+     #define SERIAL_RUN
+#endif
 #endif
 
 #include <boost/random.hpp>

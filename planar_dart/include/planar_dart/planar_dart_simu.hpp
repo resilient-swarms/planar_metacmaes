@@ -146,15 +146,15 @@ namespace planar_dart {
                 boost::fusion::for_each(_visualizations, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
 
                 if (_break) {
-                    _euclidean_distance = 10002.0;
-                    _variance_angles = 10002.0;
+                    _euclidean_distance = -10002.0;
+                    _variance_angles = -10002.0;
                     return;
                 }
 
 #ifdef GRAPHIC
                 fixed_camera();
                 _osg_viewer.frame();
-                //_osg_viewer.captureScreen("c.png");
+                _osg_viewer.captureScreen("c.png");
 #endif
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
@@ -230,7 +230,7 @@ namespace planar_dart {
 
         double performance_val() const
         {
-            return _variance_angles;
+            return -_variance_angles;//lower variance is more efficient
         }
 
         double step() const
