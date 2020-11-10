@@ -148,7 +148,7 @@
 
 <!-- ////////////////////////JOINTS/////////////////////////-->
 
-	    <joint type="revolute" name="joint_1">
+	    <joint type="revolute" name="joint_1" actuator="velocity">
 		<parent>world</parent>
 		<child>link_1</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -160,7 +160,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_2">
+	    <joint type="revolute" name="joint_2" actuator="velocity">
 		<parent>link_1</parent>
 		<child>link_2</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -172,7 +172,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_3">
+	    <joint type="revolute" name="joint_3" actuator="velocity">
 		<parent>link_2</parent>
 		<child>link_3</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -184,7 +184,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_4">
+	    <joint type="revolute" name="joint_4" actuator="velocity">
 		<parent>link_3</parent>
 		<child>link_4</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -196,7 +196,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_5">
+	    <joint type="revolute" name="joint_5" actuator="velocity">
 		<parent>link_4</parent>
 		<child>link_5</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -208,7 +208,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_6">
+	    <joint type="revolute" name="joint_6" actuator="velocity">
 		<parent>link_5</parent>
 		<child>link_6</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -220,7 +220,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_7">
+	    <joint type="revolute" name="joint_7" actuator="velocity">
 		<parent>link_6</parent>
 		<child>link_7</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>
@@ -232,7 +232,7 @@
 				</limit>
 		</axis>
 	    </joint>
-	    <joint type="revolute" name="joint_8">
+	    <joint type="revolute" name="joint_8" actuator="velocity">
 		<parent>link_7</parent>
 		<child>link_8</child>
 		<transformation>0 0.03875 0 0 0 0</transformation>

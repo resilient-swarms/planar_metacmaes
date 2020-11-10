@@ -24,6 +24,7 @@ namespace planar_dart
         public:
             using robot_t = std::shared_ptr<planar>;
             double factor = 0.5425; // -0.5425 is the largest y-value in skeleton (link 8)
+            double thickness = 0.0775;// thickness of the skeleton
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
@@ -43,15 +44,17 @@ namespace planar_dart
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
-                //auto gripper_body = rob->gripper();
-                std::string gripper_index = "link_8";
-                auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
+                auto gripper_body = rob->gripper();
                 Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                 _x = _posi[0];
                 _y = _posi[1];
                 //normalise
                 _y = (_y + factor) / (2 * factor);
                 _x = (-_x) / (factor);
+#ifdef GRAPHIC
+                std::cout << "gripper position " << _posi << std::endl;
+                std::cout << "positional coord " << _x << " , " << _y << std::endl;
+#endif
             }
 
             void get(std::vector<double> &results)
@@ -70,9 +73,7 @@ namespace planar_dart
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
-                std::string gripper_index = "link_8";
-                auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
-                // auto gripper_body = rob->gripper();
+                auto gripper_body = rob->gripper();
                 Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                 double _x = _posi[0];
                 double _y = _posi[1];
@@ -80,28 +81,38 @@ namespace planar_dart
                 auto gripper = rob->skeleton()->getBodyNode(gripper_index);
                 double _x = gripper->getPosition(0);
                 double _y = gripper->getPosition(1);*/
-                std::cout << "gripper position " << _posi << std::endl;
                 _d = sqrt(pow(_x, 2) + pow(_y, 2));
-                _theta = atan(_y / _x);
-                //normalise
-                _d /= factor;
-                _theta = _theta < 0 ? 0.0 : toNormalise(_theta); //
+                _theta = atan2(_y,_x);
+                _theta = _theta <= 0.10 ? _theta + 2.*PI : _theta;// 0.10 leaves room for thickness of the robot
+                assert((_y > 0) || (_theta<=2*PI + 0.10 && _theta>=PI-0.10 && _d <= factor + thickness/2));//either illegal move to wall or d in factor and theta [PI,2PI]
+                
+#ifdef GRAPHIC
+                std::cout << "gripper position " << _posi << std::endl;
+                std::cout << "polar coord " << _d << " , " << _theta << std::endl;
+#endif
             }
 
             void get(std::vector<double> &results)
             {
                 results.clear();
-                results.push_back(_theta <= 0.0 ? 0.0 : _theta);
-                results.push_back(_d <= 0.0 ? 0.0 : _d);
+                results.push_back(normalise_radius(_d));
+                results.push_back(normalise_angle(_theta));
+                
             }
 
         protected:
             double _theta, _d;
-            double MAX = PI / 2.0;
-            double MIN = -PI / 2.0;
-            double toNormalise(double angle)
+            double MAX = 2*PI;
+            double MIN = PI;
+            double normalise_radius(double r)
             {
-                return (angle - MIN) / PI;
+                double temp = r/factor;
+                return std::min(std::max(0.0,temp),1.0);
+            }
+            double normalise_angle(double angle)
+            {
+                double temp = (angle - MIN) / PI;
+                return std::min(std::max(0.0,temp),1.0);
             }
         };
         struct ResultantAngle : public DescriptorBase
@@ -124,8 +135,11 @@ namespace planar_dart
                     //Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                     double a = toNormalise(getRAngle(_base[0], _base[1], _posi_r[0], _posi_r[1], _posi[0], _posi[1]));
                     _angles.push_back(a <= 0 ? 0.0 : a);
+#if GRAPHIC
                     std::cout << "joint " << i - 1 << " position " << _posi_r.transpose() << std::endl;
                     std::cout << "joint " << i << " position " << _posi.transpose() << std::endl;
+                    std::cout << "angle " << i <<": " << _angles.back();
+#endif
                     //_angles.push_back(a);
                     /*auto bod = rob->skeleton()->getJoint(gripper_index);
                     _angles.push_back(atan(bod.getPosition(1) / bod.getPosition(0)));*/

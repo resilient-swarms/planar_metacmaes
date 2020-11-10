@@ -103,8 +103,7 @@ namespace planar_dart {
         }
 
         dart::dynamics::Marker* gripper(){
-            auto gripper_body = _skeleton->getBodyNode("link_8")->createMarker();
-            return _gripper_body;
+            return _skeleton->getBodyNode("link_8")->createMarker();
         }
 
         dart::dynamics::Marker* joint(int i){
@@ -156,13 +155,6 @@ namespace planar_dart {
 		void lock_single_joint(size_t index) {
                 auto jnt = _skeleton->getJoint("joint_" + std::string(1, index +'0'));
                 jnt->setActuatorType(dart::dynamics::Joint::LOCKED);
-        }
-
-        void unlock_hip_joints() {
-            for(size_t i = 0; i < 6; i++){
-                auto jnt = _skeleton->getJoint("joint_" + std::string(1, i +'0'));
-                jnt->setActuatorType(dart::dynamics::Joint::FORCE);
-            }
         }
 
     protected:
