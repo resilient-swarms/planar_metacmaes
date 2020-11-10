@@ -159,7 +159,7 @@ namespace planar_dart {
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
             Eigen::Vector3d _posi = rob->pos();
-            Eigen::Vector3d _bin(0.3875, 0.3875, 0.0);
+            Eigen::Vector3d _bin(0.3875, 0.3875, 0.0);//link 6?
 
             // updates values of covered distance average body height and arrival angle
             _euclidean_distance = sqrt(pow((_posi[0] - _bin[0]),2) + pow((_posi[1] - _bin[1]),2));

@@ -69,9 +69,8 @@ git clone https://github.com/resilient-swarms/meta-cmaes.git
 ```
 cp -r ${TEMP_DIR}/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
 ```
-- Get [SFERES](https://github.com/sferes2/sferes2) Library along with [MAP-Elites](https://github.com/resilient-swarms/map_elites) module. Compile and test the Installation:
+- Get [SFERES](https://github.com/sferes2/sferes2) Library along with [MAP-Elites](https://github.com/resilient-swarms/map_elites) module, and put them into a directory of choice. Then compile and test the Installation:
 ```
-cd ${SFERES_DIR}
 git clone https://github.com/sferes2/sferes2.git
 
 cd ${SFERES_DIR}/modules
@@ -96,9 +95,10 @@ cd ${SFERES_DIR}
 
 - Control Variables for building binaries
 
-  * `BUILD_META`
-     - True: Building for meta conditions
-     - False: Building control conditions
+  * `BUILD_TYPE`
+     - "meta": Building for meta conditions
+     - "random": Building the random control condition
+     - any other string: Building all the other control conditions
     
   * `BUILD_GRAPHICS`
      - True: Building with generating robot captures

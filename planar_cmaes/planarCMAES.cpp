@@ -96,7 +96,7 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 
 #include <sferes/run.hpp>
 
-//#define GRAPHIC
+
 
 using namespace sferes;
 

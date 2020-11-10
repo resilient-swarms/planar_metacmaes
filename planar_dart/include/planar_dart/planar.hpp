@@ -103,31 +103,13 @@ namespace planar_dart {
         }
 
         dart::dynamics::Marker* gripper(){
+            auto gripper_body = _skeleton->getBodyNode("link_8")->createMarker();
             return _gripper_body;
         }
 
         dart::dynamics::Marker* joint(int i){
-            switch (i+1)
-                {
-                    case 1:
-                            return _joint_1_marker;
-                    case 2:
-                            return _joint_2_marker;
-                    case 3:
-                            return _joint_3_marker;
-                    case 4:
-                            return _joint_4_marker;
-                    case 5:
-                            return _joint_5_marker;
-                    case 6:
-                            return _joint_6_marker;
-                    case 7:
-                            return _joint_7_marker;
-                    case 8:
-                            return _joint_8_marker;
-                    default:
-                            return _joint_1_marker;
-                }
+        
+            return _skeleton->getBodyNode("link_" + std::to_string(i+1))->createMarker();
         }
 
         std::vector<int> stuck_joints() const
