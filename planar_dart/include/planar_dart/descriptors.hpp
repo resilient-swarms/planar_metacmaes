@@ -48,9 +48,6 @@ namespace planar_dart
                 Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                 _x = _posi[0];
                 _y = _posi[1];
-                //normalise
-                _y = (_y + factor) / (2 * factor);
-                _x = (-_x) / (factor);
 #ifdef GRAPHIC
                 std::cout << "gripper position " << _posi << std::endl;
                 std::cout << "positional coord " << _x << " , " << _y << std::endl;
@@ -60,8 +57,11 @@ namespace planar_dart
             void get(std::vector<double> &results)
             {
                 results.clear();
-                results.push_back(_x <= 0.0 ? 0.0 : _x);
-                results.push_back(_y <= 0.0 ? 0.0 : _y);
+                //normalise such that 1 is furthest from origin and 0 is the origin
+                _y = (-_y) / factor;// gripper's y-range in [-factor,0] 
+                _x = (_x + factor) / (2.*factor);// gripper's x-range in [-factor,factor]
+                results.push_back(std::min(std::max(0.0,_x),1.0));
+                results.push_back(std::min(std::max(0.0,_y),1.0));
             }
 
         protected:
