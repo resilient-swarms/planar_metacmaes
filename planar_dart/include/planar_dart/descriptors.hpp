@@ -9,9 +9,12 @@
 #include <Eigen/Core>
 #include <cmath>
 #include <cstdlib>
+#include <boost/math/constants/constants.hpp>
 
 #include <planar_dart/planar.hpp>
 
+
+#define DOUBLE_PI boost::math::constants::pi<double>()
 #define JOINT_SIZE 8
 
 namespace planar_dart
@@ -23,8 +26,8 @@ namespace planar_dart
         {
         public:
             using robot_t = std::shared_ptr<planar>;
-            double factor = 0.5425; // -0.5425 is the largest y-value in skeleton (link 8)
-            double thickness = 0.0775;// thickness of the skeleton
+            double factor = 0.5425;    // -0.5425 is the largest y-value in skeleton (link 8)
+            double thickness = 0.0775; // thickness of the skeleton
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
@@ -57,11 +60,12 @@ namespace planar_dart
             void get(std::vector<double> &results)
             {
                 results.clear();
-                //normalise such that 1 is furthest from origin and 0 is the origin
-                _y = (-_y) / factor;// gripper's y-range in [-factor,0] 
-                _x = (_x + factor) / (2.*factor);// gripper's x-range in [-factor,factor]
-                results.push_back(std::min(std::max(0.0,_x),1.0));
-                results.push_back(std::min(std::max(0.0,_y),1.0));
+                //normalise y  such that 1 is furthest from origin and 0 is the origin
+                _y = (-_y) / factor; // gripper's y-range in [-factor,0]
+                //normalise x  such that 0.5 is origin, 0 and 1 are -factor and factor distance from origirn
+                _x = (_x + factor) / (2. * factor); // gripper's x-range in [-factor,factor]
+                results.push_back(std::min(std::max(0.0, _x), 1.0));
+                results.push_back(std::min(std::max(0.0, _y), 1.0));
             }
 
         protected:
@@ -82,10 +86,10 @@ namespace planar_dart
                 double _x = gripper->getPosition(0);
                 double _y = gripper->getPosition(1);*/
                 _d = sqrt(pow(_x, 2) + pow(_y, 2));
-                _theta = atan2(_y,_x);
-                _theta = _theta <= 0.10 ? _theta + 2.*PI : _theta;// 0.10 leaves room for thickness of the robot
-                assert((_y > 0) || (_theta<=2*PI + 0.10 && _theta>=PI-0.10 && _d <= factor + thickness/2));//either illegal move to wall or d in factor and theta [PI,2PI]
-                
+                _theta = atan2(_y, _x);
+                _theta = _theta <= 0.10 ? _theta + 2. * DOUBLE_PI : _theta;                                                  // 0.10 leaves room for thickness of the robot
+                assert((_y > 0) || (_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor + thickness / 2)); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
+
 #ifdef GRAPHIC
                 std::cout << "gripper position " << _posi << std::endl;
                 std::cout << "polar coord " << _d << " , " << _theta << std::endl;
@@ -97,22 +101,21 @@ namespace planar_dart
                 results.clear();
                 results.push_back(normalise_radius(_d));
                 results.push_back(normalise_angle(_theta));
-                
             }
 
         protected:
             double _theta, _d;
-            double MAX = 2*PI;
-            double MIN = PI;
+            double RadMax = 2 * DOUBLE_PI;
+            double RadMin = DOUBLE_PI;
             double normalise_radius(double r)
             {
-                double temp = r/factor;
-                return std::min(std::max(0.0,temp),1.0);
+                double temp = r / factor;
+                return std::min(std::max(0.0, temp), 1.0);
             }
             double normalise_angle(double angle)
             {
-                double temp = (angle - MIN) / PI;
-                return std::min(std::max(0.0,temp),1.0);
+                double temp = (angle - RadMin) / DOUBLE_PI;
+                return std::min(std::max(0.0, temp), 1.0);
             }
         };
         struct ResultantAngle : public DescriptorBase
@@ -122,27 +125,25 @@ namespace planar_dart
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
                 _angles = {};
+
                 Eigen::Vector3d _base(0, 0, 0);
+
                 for (size_t i = 1; i < JOINT_SIZE;)
                 {
                     //std::string gripper_index = "joint_" + std::to_string(i+1);
                     //auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
                     auto joint_body = rob->joint(i);
                     Eigen::Vector3d _posi = joint_body->getWorldPosition();
-                    joint_body = rob->joint(i - 1);
-                    Eigen::Vector3d _posi_r = joint_body->getWorldPosition();
                     //auto gripper_body = rob->gripper();
                     //Eigen::Vector3d _posi = gripper_body->getWorldPosition();
-                    double a = toNormalise(getRAngle(_base[0], _base[1], _posi_r[0], _posi_r[1], _posi[0], _posi[1]));
-                    _angles.push_back(a <= 0 ? 0.0 : a);
+                    double a = this->getRAngle(_base[0], _base[1], _posi[0], _posi[1]);
+
+                    _angles.push_back(this->normalise(a));
+
 #if GRAPHIC
-                    std::cout << "joint " << i - 1 << " position " << _posi_r.transpose() << std::endl;
                     std::cout << "joint " << i << " position " << _posi.transpose() << std::endl;
-                    std::cout << "angle " << i <<": " << _angles.back();
+                    std::cout << "angle " << i << ": " << a << std::endl;
 #endif
-                    //_angles.push_back(a);
-                    /*auto bod = rob->skeleton()->getJoint(gripper_index);
-                    _angles.push_back(atan(bod.getPosition(1) / bod.getPosition(0)));*/
                     _base = _posi;
                     i += 2;
                 }
@@ -156,24 +157,104 @@ namespace planar_dart
 
         protected:
             std::vector<double> _angles;
-            double toNormalise(double angle)
+            double clip_angle(double angle)
             {
-                double MAX = (PI / 2.0);
-                double MIN = 0.0 - (PI / 2.0);
-
-                return (angle - MIN) / (MAX - MIN);
+                if (angle < -0.10)
+                {
+                    angle += 2.0 * DOUBLE_PI;
+                }
+                else if (angle > 2.0 * DOUBLE_PI + 0.10)
+                {
+                    angle -= 2.0 * DOUBLE_PI;
+                }
+                else
+                {
+                    //do nothing
+                }
+                return angle;
             }
-            double getRAngle(double P1X, double P1Y, double P2X, double P2Y,
-                             double P3X, double P3Y)
+            virtual double normalise(double angle)
             {
-                double numerator = P2Y * (P1X - P3X) + P1Y * (P3X - P2X) + P3Y * (P2X - P1X);
-                double denominator = (P2X - P1X) * (P1X - P3X) + (P2Y - P1Y) * (P1Y - P3Y);
-                if (denominator == 0)
-                    return 0.0;
-                double ratio = numerator / denominator;
+                //double MIN = 0;
+                // full range possible [0,2Pi] in the absolute coordinate frame
+                angle = angle / (2.0 * DOUBLE_PI);
+                return std::min(std::max(0., angle), 1.);
+            }
+            virtual double getRAngle(double P1X, double P1Y, double P2X, double P2Y)
+            {
 
-                double angle = atan(ratio);
+                //relative angle to previous point (in our absolute coordinate frame)
+                //note: offset angle not used here
+                double dx = P2X - P1X;
+                double dy = P2Y - P1Y;
+                return clip_angle(atan2(dy, dx));
+            }
+        };
 
+        struct RelativeResultantAngle : public ResultantAngle
+        {
+
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+                _angles = {};
+
+                Eigen::Vector3d _base(0, 0, 0);
+                _offset_angle = 1.5*DOUBLE_PI;
+                for (size_t i = 1; i < JOINT_SIZE;)
+                {
+                    //std::string gripper_index = "joint_" + std::to_string(i+1);
+                    //auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
+                    auto joint_body = rob->joint(i);
+                    Eigen::Vector3d _posi = joint_body->getWorldPosition();
+                    //auto gripper_body = rob->gripper();
+                    //Eigen::Vector3d _posi = gripper_body->getWorldPosition();
+                    double a = this->getRAngle(_base[0], _base[1], _posi[0], _posi[1]);
+
+                    _angles.push_back(this->normalise(a));
+
+#if GRAPHIC
+                    std::cout << "joint " << i << " position " << _posi.transpose() << std::endl;
+                    std::cout << "angle " << i << ": " << a << std::endl;
+                    std::cout << "offset angle" << i << ": " << _offset_angle << std::endl;
+#endif
+                    _offset_angle = ResultantAngle::getRAngle(_base[0], _base[1], _posi[0], _posi[1]);
+                    _base = _posi;
+                    i += 2;
+                }
+            }
+
+        protected:
+            double _offset_angle;
+            virtual double normalise(double angle)
+            {
+                // assume downward orientation as in our application (so in [Pi,2Pi] for single segment)
+                double RadMax = 0.75 * DOUBLE_PI;  // adding two equal-sized segments with Pi/2 orientation,, coord (-1,-1) --> Pi/4
+                double RadMin = -0.75 * DOUBLE_PI; // adding two equal-sized segments with -Pi/2 orientation, coord (1,-1) on cirle wirh r=sqrt(2) --> -Pi/4
+                angle = (angle - RadMin) / (RadMax - RadMin);
+                return std::min(std::max(0., angle), 1.);
+            }
+            virtual double getRAngle(double P1X, double P1Y, double P2X, double P2Y)
+            {
+                //relative angle to previous point (in our *relative* coordinate frame)
+                //note: offset angle *is* used here
+                double absolute_angle = ResultantAngle::getRAngle(P1X, P1Y, P2X, P2Y);
+                return clip_relative_angle(absolute_angle - _offset_angle);
+            }
+            double clip_relative_angle(double angle)
+            {
+                if (angle < -0.75 * DOUBLE_PI -0.10)
+                {
+                    angle += 2.0 * DOUBLE_PI;
+                }
+                else if (angle > +0.75 * DOUBLE_PI +0.10)
+                {
+                    angle -= 2.0 * DOUBLE_PI;
+                }
+                else
+                {
+                    //do nothing
+                }
                 return angle;
             }
         };
@@ -204,8 +285,8 @@ namespace planar_dart
         protected:
             std::vector<double> _sum_angles;
             /*double toNormalise(double angle){
-                double MAX = (PI/2.0);
-                double MIN = 0.0 - (PI/2.0);
+                double MAX = (DOUBLE_PI/2.0);
+                double MIN = 0.0 - (DOUBLE_PI/2.0);
 
                 return (angle - MIN)/(MAX - MIN);
             }*/

@@ -9,7 +9,7 @@ cd ~/planar_metacmaes/planar_dart/
 ./waf configure --prefix=$BOTS_DIR
 ./waf
 ./waf install
-
+exit 0
 cd $SFERES_DIR
 ./waf distclean
 ./waf configure --exp planar_cmaes
