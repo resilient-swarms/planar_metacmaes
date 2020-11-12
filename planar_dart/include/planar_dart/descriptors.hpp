@@ -13,7 +13,6 @@
 
 #include <planar_dart/planar.hpp>
 
-
 #define DOUBLE_PI boost::math::constants::pi<double>()
 #define JOINT_SIZE 8
 
@@ -66,6 +65,9 @@ namespace planar_dart
                 _x = (_x + factor) / (2. * factor); // gripper's x-range in [-factor,factor]
                 results.push_back(std::min(std::max(0.0, _x), 1.0));
                 results.push_back(std::min(std::max(0.0, _y), 1.0));
+#if GRAPHIC
+                std::cout << "POS " << std::endl;
+#endif
             }
 
         protected:
@@ -87,7 +89,7 @@ namespace planar_dart
                 double _y = gripper->getPosition(1);*/
                 _d = sqrt(pow(_x, 2) + pow(_y, 2));
                 _theta = atan2(_y, _x);
-                _theta = _theta <= 0.10 ? _theta + 2. * DOUBLE_PI : _theta;                                                  // 0.10 leaves room for thickness of the robot
+                _theta = _theta <= 0.10 ? _theta + 2. * DOUBLE_PI : _theta;                                                         // 0.10 leaves room for thickness of the robot
                 assert((_y > 0) || (_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor + thickness / 2)); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
 
 #ifdef GRAPHIC
@@ -101,6 +103,9 @@ namespace planar_dart
                 results.clear();
                 results.push_back(normalise_radius(_d));
                 results.push_back(normalise_angle(_theta));
+#if GRAPHIC
+                std::cout << "POL " << std::endl;
+#endif
             }
 
         protected:
@@ -118,7 +123,7 @@ namespace planar_dart
                 return std::min(std::max(0.0, temp), 1.0);
             }
         };
-        struct ResultantAngle : public DescriptorBase
+        struct JointPairAngle : public DescriptorBase
         {
         public:
             template <typename Simu, typename robot>
@@ -153,6 +158,9 @@ namespace planar_dart
             {
                 results.clear();
                 results = _angles;
+#if GRAPHIC
+                std::cout << "JPA " << std::endl;
+#endif
             }
 
         protected:
@@ -191,7 +199,7 @@ namespace planar_dart
             }
         };
 
-        struct RelativeResultantAngle : public ResultantAngle
+        struct RelativeJointPairAngle : public JointPairAngle
         {
 
             template <typename Simu, typename robot>
@@ -200,7 +208,7 @@ namespace planar_dart
                 _angles = {};
 
                 Eigen::Vector3d _base(0, 0, 0);
-                _offset_angle = 1.5*DOUBLE_PI;
+                _offset_angle = 1.5 * DOUBLE_PI;
                 for (size_t i = 1; i < JOINT_SIZE;)
                 {
                     //std::string gripper_index = "joint_" + std::to_string(i+1);
@@ -218,10 +226,19 @@ namespace planar_dart
                     std::cout << "angle " << i << ": " << a << std::endl;
                     std::cout << "offset angle" << i << ": " << _offset_angle << std::endl;
 #endif
-                    _offset_angle = ResultantAngle::getRAngle(_base[0], _base[1], _posi[0], _posi[1]);
+                    _offset_angle = JointPairAngle::getRAngle(_base[0], _base[1], _posi[0], _posi[1]);
                     _base = _posi;
                     i += 2;
                 }
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results.clear();
+                results = _angles;
+#if GRAPHIC
+                std::cout << "RJPA " << std::endl;
+#endif
             }
 
         protected:
@@ -238,16 +255,16 @@ namespace planar_dart
             {
                 //relative angle to previous point (in our *relative* coordinate frame)
                 //note: offset angle *is* used here
-                double absolute_angle = ResultantAngle::getRAngle(P1X, P1Y, P2X, P2Y);
+                double absolute_angle = JointPairAngle::getRAngle(P1X, P1Y, P2X, P2Y);
                 return clip_relative_angle(absolute_angle - _offset_angle);
             }
             double clip_relative_angle(double angle)
             {
-                if (angle < -0.75 * DOUBLE_PI -0.10)
+                if (angle < -0.75 * DOUBLE_PI - 0.10)
                 {
                     angle += 2.0 * DOUBLE_PI;
                 }
-                else if (angle > +0.75 * DOUBLE_PI +0.10)
+                else if (angle > +0.75 * DOUBLE_PI + 0.10)
                 {
                     angle -= 2.0 * DOUBLE_PI;
                 }
@@ -280,6 +297,9 @@ namespace planar_dart
             {
                 results.clear();
                 results = _sum_angles;
+#if GRAPHIC
+                std::cout << "AS" << std::endl;
+#endif
             }
 
         protected:

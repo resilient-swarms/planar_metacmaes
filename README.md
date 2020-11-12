@@ -96,9 +96,9 @@ cd ${SFERES_DIR}
 - Control Variables for building binaries
 
   * `BUILD_TYPE`
-     - "meta": Building for meta conditions
+     - "damage_meta": Building for meta conditions
      - "random": Building the random control condition
-     - any other string: Building all the other control conditions
+     - any other string: Building all the other control conditions (control2D, control4D, and control6D)
     
   * `BUILD_GRAPHICS`
      - True: Building with generating robot captures
@@ -112,10 +112,13 @@ cd ${SFERES_DIR}
   
 - To compile, use `bash ${TEMP_DIR}/planar_metacmaes/scripts/make.sh` (**NOTE**: Use only if [this line](https://github.com/agb1n19/planar_metacmaes/README.md#L95) is already executed)
 
-- To run binaries, use `${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${type}_binary ${replicate_number} --d ${RESULTS_DIR}/${type}/exp${replicate_number} >> ${logfile}`,
-  * `type` can be `damage_meta`, `random`, `pol`, `pos`, `ra` or `as`
+- To run binaries, use `${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}$_binary ${replicate_number} ${control_type} --d ${RESULTS_DIR}/${type}/exp${replicate_number} >> ${logfile}`,
+  * `control_type` can be `pos`, `pol`, `jpa`, `rjpa`, or `as`
+  * `binary_type` can be `damage_meta`, `random`, `control2D`, `control4D` or `control6D` (depending on behavioural dimensions of ${control_type})
   * `replicate_number` is an identifier to identify experiment replicate
   
+[below needs updating with control_type]
+
 - To assess train performance, use `${SFERES_DIR}/build/exp/planar_cmaes/train_${binary_type}_binary --load ${Outfolder}/gen_${last_gen} --d ${Outfolder} -o ${Outfolder}/damage_trainperformance`
   * `binary_type` can be `damage_meta` or `damage_control`
   * `Outfolder` is usually `${RESULTS_DIR}/${type}/exp${replicate_number}`

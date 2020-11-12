@@ -40,8 +40,8 @@ int main(int argc, char** argv)
 
     using desc_t = boost::fusion::vector<planar_dart::descriptors::PositionalCoord,
                     planar_dart::descriptors::PolarCoord,
-                    planar_dart::descriptors::ResultantAngle,
-                    planar_dart::descriptors::RelativeResultantAngle,
+                    planar_dart::descriptors::JointPairAngle,
+                    planar_dart::descriptors::RelativeJointPairAngle,
                     planar_dart::descriptors::AngleSum>;
 
      // using safe_t = boost::fusion::vector<planar_dart::safety_measures::BodyColliding, planar_dart::safety_measures::MaxHeight, planar_dart::safety_measures::TurnOver>;
@@ -74,16 +74,16 @@ int main(int argc, char** argv)
     std::cout << std::endl;
 
     std::vector<double> sr;
-    simu.get_descriptor<planar_dart::descriptors::ResultantAngle>(sr);
-    std::cout << "RA: " << std::endl;
+    simu.get_descriptor<planar_dart::descriptors::JointPairAngle>(sr);
+    std::cout << "JPA: " << std::endl;
     for (size_t i = 0; i < sr.size(); i++) {
         std::cout << sr[i] << " ";
     }
     std::cout << std::endl;
 
     std::vector<double> rra;
-    simu.get_descriptor<planar_dart::descriptors::RelativeResultantAngle>(rra);
-    std::cout << "RRA: " << std::endl;
+    simu.get_descriptor<planar_dart::descriptors::RelativeJointPairAngle>(rra);
+    std::cout << "RJPA: " << std::endl;
     for (size_t i = 0; i < rra.size(); i++) {
         std::cout << rra[i] << " ";
     }

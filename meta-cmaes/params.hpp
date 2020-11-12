@@ -10,6 +10,11 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
+namespace ParameterControl
+{
+    static float bottom_factor;     // to be multiplied by bottom epochs, allow parameter control
+    static float percentage_factor; //
+} // namespace ParameterControl
 /* params for the bottom-level map */
 struct BottomParams
 {
@@ -20,15 +25,17 @@ struct BottomParams
     // grid properties, discretise 3 dimensions into 10 bins each
     struct ea
     {
-#if RA_C() || META()
+#if BEHAV_DIM==4
         SFERES_CONST size_t behav_dim = 4;
         SFERES_ARRAY(size_t, behav_shape, 8, 8, 8, 8); // 4096 cells for each bottom-level map // 4096 cells for each bottom-level map
-#elif AS_C()
+#elif BEHAV_DIM==6
         SFERES_CONST size_t behav_dim = 6;
         SFERES_ARRAY(size_t, behav_shape, 4, 4, 4, 4, 4, 4); // 4096 cells for each bottom-level map
-#else
+#elif BEHAV_DIM==2
         SFERES_CONST size_t behav_dim = 2;
         SFERES_ARRAY(size_t, behav_shape, 64, 64);
+#else 
+        #error "BEHAV_DIM must be in {2,4,6}"
 #endif
         SFERES_CONST float epsilon = 0.00;
     };
@@ -62,7 +69,7 @@ struct BottomParams
         // filling up all or even half of the cells is quite unlikely though , so not too many worries for the damage case !
 
         // NOTE: do NOT multiply by 2 to get initial size
-        SFERES_CONST unsigned init_size = 5;
+        SFERES_CONST unsigned init_size = 2000;
         ; //initial population for all maps
         SFERES_CONST int initial_aleat = 1;
     };
@@ -74,7 +81,6 @@ struct BottomParams
         SFERES_CONST float max = 1.0f;
     };
 };
-
 
 #if META()
 /* params for the top-level map */
