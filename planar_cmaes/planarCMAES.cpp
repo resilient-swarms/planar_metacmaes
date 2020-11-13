@@ -92,10 +92,14 @@ int main(int argc, char **argv)
 #ifdef PARALLEL_RUN
     sferes::eval::init_shared_mem();
 #endif
-    global::set_condition(argv[2]);
+    
 #if CMAES_CHECK()
     global::damage_index = atoi(argv[3]);
     std::cout << "will do damage " << global::damage_index << std::endl;
+#elif CONTROL()
+    global::set_condition(argv[2]);
+#elif META()
+     param_ctrl = init_parameter_control<BottomParams,CMAESParams>(std::string(argv[2]));
 #endif
 
     global::init_simu(std::string(argv[1]), std::string(std::getenv("BOTS_DIR")) + "/share/armBody.skel");
