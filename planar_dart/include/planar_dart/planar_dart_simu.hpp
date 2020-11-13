@@ -63,7 +63,11 @@ namespace planar_dart {
             using planar_control_t = control;
             // using safety_measures_t = boost::fusion::vector<safety_measures::MaxHeight, safety_measures::BodyColliding, safety_measures::TurnOver>;
             using safety_measures_t = boost::fusion::vector<safety_measures::LinkColliding>;
-            using descriptors_t = boost::fusion::vector<descriptors::PositionalCoord, descriptors::PolarCoord, descriptors::JointPairAngle,descriptors::RelativeJointPairAngle, descriptors::AngleSum>;
+            using descriptors_t = boost::fusion::vector<planar_dart::descriptors::PositionalCoord,
+                                         planar_dart::descriptors::PolarCoord,
+                                         planar_dart::descriptors::JointPairAngle,
+                                         planar_dart::descriptors::AngleSum
+                                         >;
             using viz_t = boost::fusion::vector<visualizations::TargetArrow>;
         };
 

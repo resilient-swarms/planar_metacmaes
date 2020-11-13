@@ -41,12 +41,9 @@ int main(int argc, char** argv)
                                 atof(argv[2]), atof(argv[3]), atof(argv[4]),
                                 atof(argv[5]),atof(argv[6]),atof(argv[7])};
 
-    using desc_t = boost::fusion::vector<planar_dart::descriptors::DutyCycle,
-                    planar_dart::descriptors::PositionalCoord,
-                    planar_dart::descriptors::PolarCoord,
-                    planar_dart::descriptors::JointPairAngle,
-                    planar_dart::descriptors::RelativeJointPairAngle,
-                    planar_dart::descriptors::AngleSum>;
+    using desc_t = boost::fusion::vector<planar_dart::descriptors::PositionalCoord,
+                                         planar_dart::descriptors::PolarCoord,
+                                         planar_dart::descriptors::JointPairAngle>;
 
      // using safe_t = boost::fusion::vector<planar_dart::safety_measures::BodyColliding, planar_dart::safety_measures::MaxHeight, planar_dart::safety_measures::TurnOver>;
      using viz_t = boost::fusion::vector<>;

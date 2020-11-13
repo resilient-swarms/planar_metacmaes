@@ -304,12 +304,119 @@ namespace planar_dart
 
         protected:
             std::vector<double> _sum_angles;
-            /*double toNormalise(double angle){
-                double MAX = (DOUBLE_PI/2.0);
-                double MIN = 0.0 - (DOUBLE_PI/2.0);
+        };
 
-                return (angle - MIN)/(MAX - MIN);
-            }*/
+        struct ConstantLow : public DescriptorBase
+        {
+        public:
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results = {0.0};
+#if GRAPHIC
+                std::cout << "CONSTANT_LOW" << std::endl;
+#endif
+            }
+        };
+
+        struct ConstantHigh : public DescriptorBase
+        {
+        public:
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results = {1.0};
+#if GRAPHIC
+                std::cout << "CONSTANT_HIGH" << std::endl;
+#endif
+            }
+        };
+
+        struct ConstantMid : public DescriptorBase
+        {
+        public:
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results = {0.5};
+#if GRAPHIC
+                std::cout << "CONSTANT_MID" << std::endl;
+#endif
+            }
+        };
+
+        struct RandomVal : public DescriptorBase
+        {
+        public:
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results = {(double)std::rand() / (RAND_MAX + 1.0)};
+#if GRAPHIC
+                std::cout << "RANDOM_VAL" << std::endl;
+#endif
+            }
+        };
+        struct Genotype : public DescriptorBase
+        {
+        public:
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+                _genotype = simu.controller().parameters();
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results = _genotype;
+#if GRAPHIC
+                std::cout << "GEN" << std::endl;
+#endif
+            }
+
+        protected:
+            std::vector<double> _genotype;
+        };
+        struct NoisyGenotype : public DescriptorBase
+        {
+        public:
+            template <typename Simu, typename robot>
+            void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
+            {
+                _genotype = simu.controller().parameters();
+            }
+
+            void get(std::vector<double> &results)
+            {
+                results.clear();
+                for (size_t i = 0; i < _genotype.size(); ++i)
+                {
+                    double noise = -0.15 + 0.30 * (double)std::rand() / (RAND_MAX + 1.0) ;
+                    results.push_back(std::min(std::max(noise + _genotype[i],0.0),1.0));
+                }
+#if GRAPHIC
+                std::cout << "NOISY_GEN" << std::endl;
+#endif
+            }
+
+        protected:
+            std::vector<double> _genotype;
         };
     } // namespace descriptors
 } // namespace planar_dart
