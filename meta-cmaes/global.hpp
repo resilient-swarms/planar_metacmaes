@@ -7,6 +7,7 @@
 #include <meta-cmaes/feature_vector_typedefs.hpp>
 
 #if META()
+#include <meta-cmaes/database.hpp>
 #include <meta-cmaes/params.hpp>
 #include <sferes/ea/cmaes_interface.h>
 #endif
@@ -71,52 +72,10 @@ namespace global
             assert(CONTROL());
             assert(BEHAV_DIM==6);
         }
-        else if (cond == "cmaes_check")
-        {
-            condition = ConditionType::as;
-            assert(CMAES_CHECK());
-        }
         else
         {
             throw std::runtime_error("condition " + cond + " not known");
         }
-    }
-
-    // sampling without replacement (see https://stackoverflow.com/questions/28287138/c-randomly-sample-k-numbers-from-range-0n-1-n-k-without-replacement)
-    std::set<size_t> _pickSet(size_t N, size_t k, std::mt19937 &gen)
-    {
-        std::uniform_int_distribution<> dis(0, N - 1);
-        std::set<size_t> elems;
-        elems.clear();
-
-        while (elems.size() < k)
-        {
-            elems.insert(dis(gen));
-        }
-
-        return elems;
-    }
-
-    std::set<size_t> _fullSet(size_t N)
-    {
-        std::set<size_t> elems;
-        size_t k = 0;
-        while (elems.size() < N)
-        {
-            elems.insert(k);
-            ++k;
-        }
-
-        return elems;
-    }
-
-    std::set<size_t> _take_complement(std::set<size_t> full_set, std::set<size_t> sub_set)
-    {
-        std::set<size_t> diff;
-
-        std::set_difference(full_set.begin(), full_set.end(), sub_set.begin(), sub_set.end(),
-                            std::inserter(diff, diff.begin()));
-        return diff;
     }
 
 #if CMAES_CHECK()
@@ -213,105 +172,6 @@ namespace global
 
 #if META()
     cmaes_t evo;
-    struct SampledDataEntry
-    {
-        std::vector<size_t> genotype;
-        base_features_t base_features;
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-        float fitness;
-        SampledDataEntry() {}
-        SampledDataEntry(const std::vector<size_t> &g, const base_features_t &b, const float &f) : genotype(g), base_features(b), fitness(f)
-        {
-        }
-        template <typename Individual>
-        void set_genotype(Individual &individual) const
-        {
-            for (size_t j = 0; j < individual->size(); ++j)
-            {
-                individual->gen().set_data(j, genotype[j]); // use the Sampled genotype API
-            }
-        }
-        template <class Archive>
-        void serialize(Archive &ar, const unsigned int version)
-        {
-            ar &BOOST_SERIALIZATION_NVP(base_features);
-            ar &BOOST_SERIALIZATION_NVP(fitness);
-            ar &BOOST_SERIALIZATION_NVP(genotype);
-        }
-    };
-
-    struct EvoFloatDataEntry
-    {
-        std::vector<float> genotype;
-        base_features_t base_features;
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-        float fitness;
-        EvoFloatDataEntry() {}
-        EvoFloatDataEntry(const std::vector<float> &g, const base_features_t &b, const float &f) : genotype(g), base_features(b), fitness(f)
-        {
-        }
-        // in case we want to use Evofloat instead
-        template <typename Individual>
-        void set_genotype(Individual &individual) const
-        {
-            for (size_t j = 0; j < individual->size(); ++j)
-            {
-                individual->gen().data(j, genotype[j]); // use the EvoFloat genotype API
-            }
-        }
-        template <class Archive>
-        void serialize(Archive &ar, const unsigned int version)
-        {
-            ar &BOOST_SERIALIZATION_NVP(base_features);
-            ar &BOOST_SERIALIZATION_NVP(fitness);
-            ar &BOOST_SERIALIZATION_NVP(genotype);
-        }
-    };
-
-    template <size_t capacity, typename DataType>
-    struct CircularBuffer
-    {
-        size_t get_capacity()
-        {
-            return capacity;
-        }
-        CircularBuffer() : sp(0), max_sp(0)
-        {
-            data.resize(capacity);
-        }
-        std::vector<DataType> data;
-        size_t sp;
-        size_t max_sp;
-        DataType &operator[](size_t idx)
-        {
-            return data[idx];
-        }
-        size_t size()
-        {
-            return max_sp;
-        }
-        void push_back(const DataType &d)
-        {
-            if (sp >= capacity)
-            {
-                // reset
-                sp = 0;
-            }
-            data[sp] = d;
-            if (max_sp < capacity)
-                ++max_sp;
-            ++sp;
-        }
-
-        template <class Archive>
-        void serialize(Archive &ar, const unsigned int version)
-        {
-
-            ar &BOOST_SERIALIZATION_NVP(sp);
-            ar &BOOST_SERIALIZATION_NVP(max_sp);
-            ar &BOOST_SERIALIZATION_NVP(data);
-        }
-    };
 
     typedef SampledDataEntry data_entry_t;
     typedef CircularBuffer<BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
