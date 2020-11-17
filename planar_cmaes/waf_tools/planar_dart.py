@@ -32,9 +32,8 @@ def check_planar_dart(conf):
 
     # You can customize where you want to check
     # e.g. here we search also in a folder defined by an environmental variable
-    if 'BOTS_DIR' in os.environ:
-    	includes_check = [os.environ['BOTS_DIR'] + '/include'] + includes_check
-    	libs_check = [os.environ['BOTS_DIR'] + '/lib'] + libs_check
+    includes_check = [os.environ['BOTS_DIR'] + '/include'] + includes_check
+    libs_check = [os.environ['BOTS_DIR'] + '/lib'] + libs_check
 
     if conf.options.planar_dart:
     	includes_check = [conf.options.planar_dart + '/include']
