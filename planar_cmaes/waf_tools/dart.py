@@ -22,8 +22,8 @@ def check_dart(conf):
 		includes_check = ['/usr/local/include', '/usr/include']
 		libs_check = ['/usr/local/lib', '/usr/lib']
 	if 'BOTS_DIR' in os.environ:
-		includes_check = ['/lyceum/agb1n19/planar_robo/include'] + includes_check
-		libs_check =  ['/lyceum/agb1n19/planar_robo/lib']+ libs_check
+		includes_check = [os.environ['BOTS_DIR']+/include'] + includes_check
+		libs_check =  [os.environ['BOTS_DIR']+/lib']+ libs_check
 
 	# DART requires some of bullets includes (if installed with bullet enabled)
 	bullet_check = ['/usr/local/include/bullet', '/usr/include/bullet']
