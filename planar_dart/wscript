@@ -49,7 +49,7 @@ def configure(conf):
             common_flags = "-Wall -std=c++11"
         opt_flags = " -O3 -march=native -g"
 
-    all_flags = common_flags + opt_flags
+    all_flags = common_flags + opt_flags + " -rpath"
     conf.env['CXXFLAGS'] = conf.env['CXXFLAGS'] + all_flags.split(' ')
     print conf.env['CXXFLAGS']
 
