@@ -35,7 +35,7 @@ def _build_test(bld, take_compl=[]):
 	else:
 		do_cmaes_check=False
 
-	cxxflags+=['-g']
+	cxxflags+=['-g','-rpath']
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
 								use = 'sferes2',
@@ -63,6 +63,7 @@ def _build_test(bld, take_compl=[]):
 def _build_evolution(bld):
 	libs = 'PLANAR_DART DART EIGEN BOOST_DART BOOST TBB '
 	cxxflags = bld.get_env()['CXXFLAGS']
+	cxxflags+=['-g','-rpath']
 	num_cores = os.environ.get('NUM_CORES',1)
 	if os.environ.get('BUILD_GRAPHICS',"False") == "True":
 		cxxflags+=["-DGRAPHIC"]
@@ -73,7 +74,7 @@ def _build_evolution(bld):
 							use = 'sferes2',
 							uselib = libs,
 							target = 'planarCMAES_damage_meta',
-							cxxflags = cxxflags + ['-g','-march=native',"-DBEHAV_DIM=4",
+							cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
 							"-DEXPERIMENT_TYPE=0","-DNUM_CORES="+str(num_cores)],   # -march=native
 							variants = ['BINARY'])
 
@@ -85,7 +86,7 @@ def _build_evolution(bld):
 								use = 'sferes2',
 								uselib = libs,
 								target = 'planarCMAES_'+c,
-								cxxflags = cxxflags + ['-g','-march=native',"-DBEHAV_DIM=4",
+								cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
 								"-DEXPERIMENT_TYPE=1","-DNUM_CORES="+str(num_cores)],   # -march=native
 								variants = ['BINARY'])
 	else:
@@ -96,7 +97,7 @@ def _build_evolution(bld):
 								use = 'sferes2',
 								uselib = libs,
 								target = 'planarCMAES_'+c,
-								cxxflags = cxxflags + ['-g','-march=native','-DBEHAV_DIM='+str(control_conditions[c]),
+								cxxflags = cxxflags + ['-march=native','-DBEHAV_DIM='+str(control_conditions[c]),
 								"-DEXPERIMENT_TYPE=2","-DNUM_CORES="+str(num_cores)],   # -march=native
 								variants = ['BINARY'])
 def build(bld):
