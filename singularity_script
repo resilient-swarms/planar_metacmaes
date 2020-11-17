@@ -1,0 +1,70 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%setup
+      #Runs on host. The path to the image is $SINGULARITY_ROOTFS
+
+%post
+      #Post setup, runs inside the image
+
+  #Default mount paths
+      mkdir /scratch /data /shared /fastdata
+
+  #Install the packages you need
+  apt update -y
+  apt install -y software-properties-common
+  export HOME_CONTAINER=/home/dmb1m19
+  export BOTS_DIR=$HOME_CONTAINER/Resibots 
+  export SFERES_DIR=$HOME_CONTAINER/sferes2
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
+
+  apt-add-repository ppa:dartsim/ppa
+  apt update
+  apt install build-essential cmake pkg-config git -y
+  apt install libeigen3-dev libassimp-dev libccd-dev libfcl-dev libboost-regex-dev libboost-system-dev libode-dev -y
+ apt install libboost-all-dev -y
+ apt install libeigen3-dev libboost-serialization-dev libboost-filesystem-dev libboost-test-dev libboost-program-options-dev libboost-thread-dev libboost-regex-dev libboost-graph-dev -y
+ apt install libtbb-dev -y
+ apt install libopenscenegraph-dev -y
+ apt install libxmu-dev libxi-dev -y
+ apt install freeglut3-dev -y
+
+
+ apt install libtinyxml-dev libtinyxml2-dev -y
+ apt install liburdfdom-dev liburdfdom-headers-dev -y
+
+ apt install libode-dev
+
+
+ # Put meta-cmaes repository in place
+ alias python=/usr/local/bin/python2.7
+
+
+# Install  dart
+ cd /home && mkdir dmb1m19 # make home dir
+ cd $HOME_CONTAINER
+ git clone https://github.com/agb1n19/planar_metacmaes
+ git clone git://github.com/dartsim/dart.git
+ cd dart
+ git checkout v6.3.0
+ mkdir build 
+ cd build 
+ cmake -DDART_ENABLE_SIMD=ON -DCMAKE_INSTALL_PREFIX=$BOTS_DIR .. 
+ make -j8 && make install
+
+ cd ${HOME_CONTAINER}/planar_metacmaes/planar_dart/
+ ./waf configure --prefix=$BOTS_DIR
+ ./waf 
+ ./waf install
+
+ cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_cmaes/armBody.skel ${BOTS_DIR}/share/armBody.skel
+ cd ${HOME_CONTAINER}
+ git clone https://github.com/sferes2/sferes2.git
+
+ cd ${SFERES_DIR}/modules && git clone https://github.com/resilient-swarms/map_elites.git
+
+ cd ${BOTS_DIR}/include && git clone https://github.com/resilient-swarms/meta-cmaes.git
+%runscript
+
+%test
+  #Test script to verify that the image is built and running correctly
