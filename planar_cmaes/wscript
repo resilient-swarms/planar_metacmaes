@@ -35,7 +35,7 @@ def _build_test(bld, take_compl=[]):
 	else:
 		do_cmaes_check=False
 
-	cxxflags+=['-g','-rpath']
+	cxxflags+=['-g']
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
 								use = 'sferes2',
@@ -63,7 +63,7 @@ def _build_test(bld, take_compl=[]):
 def _build_evolution(bld):
 	libs = 'PLANAR_DART DART EIGEN BOOST_DART BOOST TBB '
 	cxxflags = bld.get_env()['CXXFLAGS']
-	cxxflags+=['-g','-rpath']
+	cxxflags+=['-g']
 	num_cores = os.environ.get('NUM_CORES',1)
 	if os.environ.get('BUILD_GRAPHICS',"False") == "True":
 		cxxflags+=["-DGRAPHIC"]
