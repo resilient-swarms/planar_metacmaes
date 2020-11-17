@@ -21,10 +21,10 @@ def check_dart(conf):
 	else:
 		includes_check = ['/usr/local/include', '/usr/include']
 		libs_check = ['/usr/local/lib', '/usr/lib']
-
+	print("adding BOTS_DIR")
 	includes_check = [os.environ['BOTS_DIR']+'/include'] + includes_check
 	libs_check =  [os.environ['BOTS_DIR']+'/lib']+ libs_check
-
+	print("includes_check=",includes_check)
 	# DART requires some of bullets includes (if installed with bullet enabled)
 	bullet_check = ['/usr/local/include/bullet', '/usr/include/bullet']
 	bullet_found = False
@@ -59,9 +59,13 @@ def check_dart(conf):
 	try:
 		conf.start_msg('Checking for DART includes (including utils/urdf)')
 		res = conf.find_file('dart/dart.hpp', includes_check)
+		print("dart/dart.hpp found ")
 		res = res and conf.find_file('dart/utils/utils.hpp', includes_check)
+		print("dart/utils/utils.hpp found ")
 		res = res and conf.find_file('dart/utils/urdf/urdf.hpp', includes_check)
+		print("dart/utils/urdf/urdf.hpp found ")
 		conf.end_msg('ok')
+		
 		try:
 			conf.start_msg('Checking for DART gui includes')
 			res = res and conf.find_file('dart/gui/gui.hpp', includes_check)
