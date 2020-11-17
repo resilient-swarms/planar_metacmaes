@@ -112,7 +112,7 @@ cd ${SFERES_DIR}
   
 - To compile, use `bash ${TEMP_DIR}/planar_metacmaes/scripts/make.sh` (**NOTE**: Use only if [this line](https://github.com/agb1n19/planar_metacmaes/README.md#L95) is already executed)
 
-- To run binaries, use `${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}$_binary ${replicate_number} ${control_type} --d ${RESULTS_DIR}/${type}/exp${replicate_number} >> ${logfile}`,
+- To run binaries, use `${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}$_binary ${replicate_number} ${control_type} --d ${RESULTS_DIR}/${control_type}/exp${replicate_number} >> ${logfile}`,
   * `control_type` can be `pos`, `pol`, `jpa`, `rjpa`, or `as` for control conditions, or `b#1p#2` for the meta-condition, where #1 and #2 are numbers in {1,2,5,10}. 
   * `binary_type` can be `damage_meta`, `random`, `control2D`, `control4D` or `control6D` (depending on behavioural dimensions of ${control_type})
   * `replicate_number` is an identifier to identify experiment replicate
