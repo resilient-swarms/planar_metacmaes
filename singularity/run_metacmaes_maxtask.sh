@@ -2,8 +2,11 @@
 
 # this will run inside the singularity container
 
+ export HOME_CONTAINER=/singularity_home/ 
+ export BOTS_DIR=$HOME_CONTAINER/Resibots 
+ export SFERES_DIR=$HOME_CONTAINER/sferes2
+ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
 
-export SFERES_DIR="/singularity_home/sferes2"
 
 binary_type=$1
 control_type=$2   # need to supply argument with the method
