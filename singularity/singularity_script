@@ -57,7 +57,7 @@ From: ubuntu:16.04
  ./waf 
  ./waf install
 
- cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_cmaes/armBody.skel ${BOTS_DIR}/share/armBody.skel
+ cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_DIR}/share/armBody.skel
  cd ${HOME_CONTAINER}
  git clone https://github.com/sferes2/sferes2.git
 
