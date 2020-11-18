@@ -13,7 +13,8 @@ From: ubuntu:16.04
   #Install the packages you need
   apt update -y
   apt install -y software-properties-common
-  export HOME_CONTAINER=/home/dmb1m19
+  mkdir /singularity_home/
+  export HOME_CONTAINER=/singularity_home/
   export BOTS_DIR=$HOME_CONTAINER/Resibots 
   export SFERES_DIR=$HOME_CONTAINER/sferes2
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
@@ -41,9 +42,8 @@ From: ubuntu:16.04
 
 
 # Install  dart
- cd /home && mkdir dmb1m19 # make home dir
  cd $HOME_CONTAINER
- git clone https://github.com/agb1n19/planar_metacmaes
+ git clone https://github.com/resilient-swarms/planar_metacmaes
  git clone git://github.com/dartsim/dart.git
  cd dart
  git checkout v6.3.0
