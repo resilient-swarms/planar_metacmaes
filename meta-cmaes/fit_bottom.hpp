@@ -5,7 +5,7 @@
 #include <meta-cmaes/bottom_typedefs.hpp>
 #include <Eigen/Dense>
 
-#if CONTROL()
+#if CONTROL_PLUS()
 
 #include <modules/map_elites/fit_map.hpp>
 #endif
@@ -18,7 +18,7 @@ namespace sferes
 {
     namespace fit
     {
-#if CONTROL()
+#if CONTROL_PLUS() 
 
         SFERES_FITNESS(FitBottom, sferes::fit::FitMap)
         {
@@ -38,7 +38,7 @@ namespace sferes
 #endif
             inline void set_fitness(float fFitness)
             {
-#if CONTROL()
+#if CONTROL_PLUS()
                 this->_objs.resize(1);
                 this->_objs[0] = fFitness;
 #endif

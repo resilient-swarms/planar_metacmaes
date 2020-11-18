@@ -52,19 +52,19 @@ struct BottomParams
 
     struct pop
     {
-#if CONTROL()
+#if CONTROL_PLUS()
         // number of generations
-        SFERES_CONST unsigned nb_gen = 25000; // at most 20,000 evaluations for each of 500 meta-generations for meta-learning --> 10M evals (take a bit more just in case there is time enough)
+        SFERES_CONST unsigned nb_gen = 100000; // at most 20,000 evaluations for each of 500 meta-generations for meta-learning --> 10M evals (take a bit more just in case there is time enough)
         // how often should the result file be written (here, each 250 generations == 100,000 ; on 16-cores is every 1-2 hours)
         SFERES_CONST int dump_period = 250; //20
 #endif
         // NOTE: multiply size by 2 to obtain the actual batch ! !
-        SFERES_CONST unsigned size = 3; //---> 400 individuals; note this is the size per map, for each bottom generation (total of 10,000 evals for bottom-level)
+        SFERES_CONST unsigned size = 200; //---> 400 individuals; note this is the size per map, for each bottom generation (total of 10,000 evals for bottom-level)
         //  --> leads to a total of at most 20,000 evaluations per meta-generation (400*25 + 0.10*4,096*25) for the environments case, and at most 1/1 ratio
         // filling up all or even half of the cells is quite unlikely though , so not too many worries for the damage case !
 
         // NOTE: do NOT multiply by 2 to get initial size
-        SFERES_CONST unsigned init_size = 3;
+        SFERES_CONST unsigned init_size = 2000;
         ; //initial population for all maps
         SFERES_CONST int initial_aleat = 1;
     };
