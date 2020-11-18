@@ -46,7 +46,7 @@ namespace planar_dart
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
-                auto gripper_body = rob->gripper();
+                auto gripper_body = rob->gripper("pos");
                 Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                 _x = _posi[0];
                 _y = _posi[1];
@@ -79,7 +79,7 @@ namespace planar_dart
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
-                auto gripper_body = rob->gripper();
+                auto gripper_body = rob->gripper("pol");
                 Eigen::Vector3d _posi = gripper_body->getWorldPosition();
                 double _x = _posi[0];
                 double _y = _posi[1];
@@ -137,7 +137,7 @@ namespace planar_dart
                 {
                     //std::string gripper_index = "joint_" + std::to_string(i+1);
                     //auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
-                    auto joint_body = rob->joint(i);
+                    auto joint_body = rob->joint(i,"jpa");
                     Eigen::Vector3d _posi = joint_body->getWorldPosition();
                     //auto gripper_body = rob->gripper();
                     //Eigen::Vector3d _posi = gripper_body->getWorldPosition();
@@ -213,7 +213,7 @@ namespace planar_dart
                 {
                     //std::string gripper_index = "joint_" + std::to_string(i+1);
                     //auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
-                    auto joint_body = rob->joint(i);
+                    auto joint_body = rob->joint(i,"rjpa");
                     Eigen::Vector3d _posi = joint_body->getWorldPosition();
                     //auto gripper_body = rob->gripper();
                     //Eigen::Vector3d _posi = gripper_body->getWorldPosition();

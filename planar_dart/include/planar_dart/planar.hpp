@@ -101,14 +101,17 @@ namespace planar_dart {
             }
             return false;
         }
-
-        dart::dynamics::Marker* gripper(){
-            return _skeleton->getBodyNode("link_8")->createMarker();
+        // note that default arguments are createMarker(
+        // const std::string& name = "marker",
+        // const Eigen::Vector3d& position = Eigen::Vector3d::Zero(),
+        // const Eigen::Vector4d& color = Eigen::Vector4d::Constant(1.0))
+        dart::dynamics::Marker* gripper(const std::string& tag){
+            return _skeleton->getBodyNode("link_8")->createMarker(std::string("grippermarker" + tag));
         }
 
-        dart::dynamics::Marker* joint(int i){
+        dart::dynamics::Marker* joint(int i,const std::string& tag){
         
-            return _skeleton->getBodyNode("link_" + std::to_string(i+1))->createMarker();
+            return _skeleton->getBodyNode("link_" + std::to_string(i+1))->createMarker(std::string("link_" + std::to_string(i+1)+"marker" + tag));
         }
 
         std::vector<int> stuck_joints() const
