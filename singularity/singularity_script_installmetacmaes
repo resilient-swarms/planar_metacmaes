@@ -7,13 +7,16 @@ From: planar_metacmaes.sif
  export SFERES_DIR=$HOME_CONTAINER/sferes2
  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
 
+
+cd $HOME_CONTAINER/planar_metacmaes/planar_dart/
+git pull
 cp -rv $HOME_CONTAINER/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
 cp -rv $HOME_CONTAINER/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
+
 
 #build meta
 
 export BUILD_TYPE=damage_meta
-cd $HOME_CONTAINER/planar_metacmaes/planar_dart/
 ./waf distclean
 ./waf configure --prefix=$BOTS_DIR
 ./waf
