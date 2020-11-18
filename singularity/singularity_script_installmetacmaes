@@ -6,7 +6,8 @@ From: planar_metacmaes.sif
  export BOTS_DIR=$HOME_CONTAINER/Resibots 
  export SFERES_DIR=$HOME_CONTAINER/sferes2
  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
-
+ export NUM_CORES=40
+ echo "will use $NUM_CORES cores"
 
 cd $HOME_CONTAINER/planar_metacmaes/planar_dart/
 git pull
