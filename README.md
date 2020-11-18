@@ -36,11 +36,10 @@ sudo apt-get install libtbb-dev
 - In order to use planar files, you need to clone this repository to a `TEMP_DIR`:
 ```
 cd ${TEMP_DIR}
-git clone https://github.com/agb1n19/planar_metacmaes
+git clone https://github.com/resilient-swarms/planar_metacmaes
 ```
 - To install [DART](https://github.com/dartsim/dart) simulator:
 ```
-cd ${TEMP_DIR}/planar_metacmaes/ && mkdir extras && cd extras/
 git clone git://github.com/dartsim/dart.git
 cd dart
 git checkout v6.3.0
@@ -88,8 +87,8 @@ cp -r ${TEMP_DIR}/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
 - Testing Installation can be done by`:
 ```
 cd ${SFERES_DIR}
-./waf configure --exp planar_cmaes
-./waf --exp planar_cmaes
+./waf configure --exp planar_cmaes --dart $BOTS_DIR
+./waf --exp planar_cmaes --dart $BOTS_DIR
 ```
 ## Executing Experiments
 
