@@ -17,8 +17,7 @@
 
 #include <boost/fusion/container/vector.hpp>
 
-//#include <boost/circular_buffer.hpp>
-//#include <meta-cmaes/circular_buffer_serialisation.hpp>
+
 #include <meta-cmaes/sampled.hpp>
 #include <stdexcept>
 
@@ -35,7 +34,4 @@ typedef boost::fusion::vector<> base_safe_t;
 typedef boost::fusion::vector<planar_dart::descriptors::PositionalCoord, planar_dart::descriptors::PolarCoord,  planar_dart::descriptors::JointPairAngle,  planar_dart::descriptors::RelativeJointPairAngle, planar_dart::descriptors::AngleSum> base_desc_t;
 typedef planar_dart::control base_controller_t;
 typedef planar_dart::planarDARTSimu<planar_dart::safety<base_safe_t>, planar_dart::desc<base_desc_t>> simulator_t;
-// note to self:
-// adding rhex_dart::rhex_control<base_controller_t> as first argument to Simu type seems to fail
-
 #endif
