@@ -82,6 +82,7 @@ namespace global
     size_t damage_index;
 #endif
     size_t nb_evals = 0;
+    size_t generations = 0;
     std::shared_ptr<planar_dart::planar> global_robot;
 
 #if DAMAGE_TESTS() || ENVIR_TESTS()
