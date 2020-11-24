@@ -20,20 +20,23 @@ outputdir=${RESULTS_DIR}/${condition_type}_${control_type}/exp${replicate_number
 
 
 
-if [[ condition_type=="damage_meta" ]]; then
+if [[ "$condition_type" == "damage_meta" ]]; then
 	condition_type="meta"  # remove the damage prefix
+	gen=500
+else
+	gen=50000
 fi
 
 binary=${SFERES_DIR}/build/exp/planar_cmaes/${test_type}_damage_${condition_type}_binary
 
-if [[ test_type=="individual" ]]; then
+if [[ "$test_type" == "individual" ]]; then
 	# loop over all damage indices
 	for i in 0 1 2 3 4 5 6 7; do
 		echo "damage $i"
 		${binary} ${replicate_number} ${i} --d ${outputdir} >> ${outputdir}/log_${test_type}${i}.txt
 	done
 else
-	${binary} ${replicate_number} --d ${outputdir} >> ${outputdir}/log_${test_type}.txt
+	${binary} ${replicate_number} --load ${outputdir}/gen_${gen} --d ${outputdir} -o ${outputdir}/${test_type}_damage_performance >> ${outputdir}/log_${test_type}.txt
 
 fi	
 
