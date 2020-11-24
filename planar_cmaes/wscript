@@ -28,6 +28,7 @@ def _build_individual_damagetest(bld):
 
 	cxxflags+=["-DINDIVIDUAL_DAMAGE"]
 	tag="test_individual"
+	cxxflags+=['-g']
 	#meta
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
