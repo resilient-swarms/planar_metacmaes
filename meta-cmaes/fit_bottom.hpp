@@ -112,7 +112,7 @@ namespace sferes
                 get_base_features(b, simu);
                 // get descriptor
                 return get_desc(b);
-#endif
+#endif  // NO_WEIGHT() else WEIGHT()
             }
 
 #if WEIGHT()
@@ -139,7 +139,8 @@ namespace sferes
 #endif
                 return vec;
             }
-#endif
+#endif  // WEIGHT()
+
 #if META()
             template <typename Individual>
             static void add_to_database(Individual & ind)

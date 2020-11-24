@@ -15,6 +15,10 @@ RESULTS_DIR=$4 # destination folder
 
 mkdir $RESULTS_DIR
 mkdir $RESULTS_DIR/${binary_type}_${control_type}
-mkdir ${RESULTS_DIR}/${binary_type}_${control_type}/exp${replicate_number}
+outputdir=${RESULTS_DIR}/${binary_type}_${control_type}/exp${replicate_number}
 
-${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}_binary ${replicate_number} ${control_type} --d ${RESULTS_DIR}/${binary_type}_${control_type}/exp${replicate_number} >> log.txt
+binary=${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}_binary
+
+
+
+${binary} ${replicate_number} ${control_type} --d ${outputdir} >> ${outputdir}/log.txt

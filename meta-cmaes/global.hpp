@@ -9,10 +9,13 @@
 #if META()
 #include <meta-cmaes/database.hpp>
 #include <meta-cmaes/params.hpp>
+#endif
+#if META() || CMAES_CHECK()
 #include <sferes/ea/cmaes_interface.h>
 #endif
 
 #define JOINT_SIZE 8
+
 namespace global
 {
     // set the right condition
@@ -28,6 +31,7 @@ namespace global
         as,
         cmaes_check
     } condition;
+#ifndef TEST
     void set_condition(const std::string &cond)
     {
         if (cond == "meta")
@@ -77,7 +81,7 @@ namespace global
             throw std::runtime_error("condition " + cond + " not known");
         }
     }
-
+#endif
 #if CMAES_CHECK()
     size_t damage_index;
 #endif
@@ -171,9 +175,12 @@ namespace global
 #endif
     }
 
-#if META()
-    cmaes_t evo;
 
+#if META() || CMAES_CHECK()
+    cmaes_t evo;
+#endif
+    
+#if META()
     typedef SampledDataEntry data_entry_t;
     typedef CircularBuffer<BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
     database_t database;

@@ -1,6 +1,5 @@
 
 
-
 #define C_META_CMAES 0
 #define C_RANDOM_WEIGHT 1
 #define C_CONTROL 2
@@ -27,11 +26,13 @@
 
 //#define PRINTING
 //#define CHECK_PARALLEL
-#ifndef TEST
-#if NUM_CORES > 1
-    #define PARALLEL_RUN
+#ifdef TEST
+#define BEHAV_DIM 2 //
 #else
-     #define SERIAL_RUN
+#if NUM_CORES > 1
+#define PARALLEL_RUN
+#else
+#define SERIAL_RUN
 #endif
 #endif
 
@@ -64,7 +65,7 @@
 typedef boost::fusion::vector<sferes::stat::BestFit<phen_t, CMAESCHECKParams>> stat_t;
 
 typedef modif::Dummy<> modifier_t;
-typedef sferes::ea::Cmaes<phen_t, eval_t, stat_t, modifier_t,CMAESCHECKParams> ea_t;
+typedef sferes::ea::Cmaes<phen_t, eval_t, stat_t, modifier_t, CMAESCHECKParams> ea_t;
 #else
 #include <meta-cmaes/control_typedefs.hpp>
 #ifdef TEST
@@ -74,6 +75,7 @@ typedef sferes::ea::Cmaes<phen_t, eval_t, stat_t, modifier_t,CMAESCHECKParams> e
 #endif
 #include <sferes/ea/ea.hpp>
 #include <modules/map_elites/map_elites.hpp>
+
 typedef boost::fusion::vector<sferes::stat::Map<phen_t, BottomParams>> stat_t;
 
 typedef modif::Dummy<> modifier_t;
@@ -82,25 +84,27 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 
 #include <sferes/run.hpp>
 
-
-
 using namespace sferes;
 
 int main(int argc, char **argv)
 {
-    std::srand(atoi(argv[1])); 
+    std::srand(atoi(argv[1]));
     ea_t ea;
 #ifdef PARALLEL_RUN
     sferes::eval::init_shared_mem();
 #endif
-    
+
 #if CMAES_CHECK()
     global::damage_index = atoi(argv[3]);
     std::cout << "will do damage " << global::damage_index << std::endl;
-#elif CONTROL()
+#endif
+
+#ifndef TEST
+#if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
-     param_ctrl = init_parameter_control<BottomParams,CMAESParams>(std::string(argv[2]));
+    param_ctrl = init_parameter_control<BottomParams, CMAESParams>(std::string(argv[2]));
+#endif
 #endif
 
     global::init_simu(std::string(argv[1]), std::string(std::getenv("BOTS_DIR")) + "/share/armBody.skel");

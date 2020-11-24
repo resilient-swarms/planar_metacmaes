@@ -93,21 +93,22 @@ cd ${SFERES_DIR}
 ## Executing Experiments
 
 - Control Variables for building binaries
+    * `BUILD_PHASE`: 
+     - "TEST": test for recovery from all test-set damages (not seen in meta-evolution)
+     - "TRAIN": test for recovery from all train-set damages (seen in meta-evolution)
+     - "INDIVIDUAL_DAMAGE": for each individual damage, random search for the best recovery solution
+     - any other string: evolution
+    * `BUILD_TYPE`: in case BUILD_PHASE=evolution, determines the type of condition,
+      - "damage_meta": Building for meta conditions
+      - "random": Building the random control condition
+      - any other string: Building all the other control conditions (control2D, control4D, and control6D)
+    * `NUM_CORES`: the number of cores (1 by default)
+    * `BUILD_GRAPHICS`
+      - True: Building with generating robot captures
+      - any other string: Building wihout recording captures
+  
 
-  * `BUILD_TYPE`
-     - "damage_meta": Building for meta conditions
-     - "random": Building the random control condition
-     - any other string: Building all the other control conditions (control2D, control4D, and control6D)
-    
-  * `BUILD_GRAPHICS`
-     - True: Building with generating robot captures
-     - False: Building wihout recording captures
-    
-  * `NUM_CORES`: Optional variable to set num of cores
   
-  * `BUILD_TRAIN`: If True, builds train binaries
-  
-  * `BUILD_TEST`: If True, builds test binaries
   
 - To compile, use `bash ${TEMP_DIR}/planar_metacmaes/scripts/make.sh` (**NOTE**: Use only if [this line](https://github.com/agb1n19/planar_metacmaes/README.md#L95) is already executed)
 

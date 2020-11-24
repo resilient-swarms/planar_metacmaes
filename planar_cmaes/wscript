@@ -18,6 +18,53 @@ def configure(conf):
     conf.check_planar_dart()
 
 
+def _build_individual_damagetest(bld):
+	take_compl=["-DTAKE_COMPLEMENT"]
+	libs = 'PLANAR_DART DART EIGEN BOOST_DART BOOST TBB '
+	cxxflags = bld.get_env()['CXXFLAGS']
+	if os.environ.get('BUILD_GRAPHIC',"False") == "True":
+		cxxflags+=["-DGRAPHIC"]
+		libs += 'DART_GRAPHIC'
+
+	cxxflags+=["-DINDIVIDUAL_DAMAGE"]
+	tag="test_individual"
+	#meta
+	sferes.create_variants(bld,
+								source = 'planarCMAES.cpp',
+								use = 'sferes2',
+								uselib = libs,
+								target = tag+'_damage_meta',
+								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1"],   # damage
+								variants = ['BINARY'])
+    #random
+	sferes.create_variants(bld,
+								source = 'planarCMAES.cpp',
+								use = 'sferes2',
+								uselib = libs,
+								target = tag+'_damage_random',
+								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=1","-DNUM_CORES=1"],   # damage
+								variants = ['BINARY'])
+
+	#control
+	sferes.create_variants(bld,
+							source = 'planarCMAES.cpp',
+							use = 'sferes2',
+							uselib = libs,
+							target = tag+'_damage_control',
+							cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=2","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
+							variants = ['BINARY'])
+
+	#cmaes_check
+	sferes.create_variants(bld,
+							source = 'planarCMAES.cpp',
+							use = 'sferes2',
+							uselib = libs,
+							target = tag+'_damage_cmaescheck',
+							cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=3","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
+							variants = ['BINARY'])
+
+
+
 def _build_test(bld, take_compl=[]):
 	libs = 'PLANAR_DART DART EIGEN BOOST_DART BOOST TBB '
 	cxxflags = bld.get_env()['CXXFLAGS']
@@ -29,13 +76,9 @@ def _build_test(bld, take_compl=[]):
 	if os.environ.get('BUILD_GRAPHIC',"False") == "True":
 		cxxflags+=["-DGRAPHIC"]
 		libs += 'DART_GRAPHIC'
-	if os.environ.get('BUILD_INDIVIDUAL_DAMAGE',"False") == "True":
-		cxxflags+=["-DINDIVIDUAL_DAMAGE"]
-		do_cmaes_check=True
-	else:
-		do_cmaes_check=False
 
 	cxxflags+=['-g']
+	#meta
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
 								use = 'sferes2',
@@ -43,6 +86,15 @@ def _build_test(bld, take_compl=[]):
 								target = tag+'_damage_meta',
 								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1"],   # damage
 								variants = ['BINARY'])
+    #random
+	sferes.create_variants(bld,
+								source = 'planarCMAES.cpp',
+								use = 'sferes2',
+								uselib = libs,
+								target = tag+'_damage_random',
+								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=1","-DNUM_CORES=1"],   # damage
+								variants = ['BINARY'])
+	#control
 	sferes.create_variants(bld,
 							source = 'planarCMAES.cpp',
 							use = 'sferes2',
@@ -50,15 +102,7 @@ def _build_test(bld, take_compl=[]):
 							target = tag+'_damage_control',
 							cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=2","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
 							variants = ['BINARY'])
-	if do_cmaes_check:
-		# note this is not a meta-condition but can only generate up to 4 binaries at a time
-		sferes.create_variants(bld,
-									source = 'planarCMAES.cpp',
-									use = 'sferes2',
-									uselib = libs,
-									target = tag+'_damage_cmaescheck',
-									cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=5","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
-									variants = ['BINARY'])
+
 
 def _build_evolution(bld):
 	libs = 'PLANAR_DART DART EIGEN BOOST_DART BOOST TBB '
@@ -102,10 +146,12 @@ def _build_evolution(bld):
 								variants = ['BINARY'])
 def build(bld):
 	
-	if os.environ.get('BUILD_TEST',"False") == "True":
+	if os.environ.get('BUILD_PHASE',"") == "TEST":
 		_build_test(bld,take_compl=["-DTAKE_COMPLEMENT"])
-	elif os.environ.get('BUILD_TRAIN',"False") == "True":
+	elif os.environ.get('BUILD_PHASE',"") == "TRAIN":
 		_build_test(bld)
+	elif os.environ.get('BUILD_PHASE',"") == "INDIVIDUAL_DAMAGE":
+		_build_individual_damagetest(bld)
 	else:
 		_build_evolution(bld)
        
