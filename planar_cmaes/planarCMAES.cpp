@@ -94,12 +94,14 @@ int main(int argc, char **argv)
     sferes::eval::init_shared_mem();
 #endif
 
+
+
+#ifdef TEST
 #if CMAES_CHECK()
     global::damage_index = atoi(argv[2]);
     std::cout << "will do damage " << global::damage_index << std::endl;
 #endif
-
-#ifndef TEST
+#else
 #if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
