@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 #endif
 
 #if CMAES_CHECK()
-    global::damage_index = atoi(argv[3]);
+    global::damage_index = atoi(argv[2]);
     std::cout << "will do damage " << global::damage_index << std::endl;
 #endif
 
