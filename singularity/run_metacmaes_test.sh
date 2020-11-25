@@ -16,9 +16,9 @@ RESULTS_DIR=$5 # destination folder
 
 mkdir $RESULTS_DIR
 mkdir $RESULTS_DIR/${condition_type}_${control_type}
-outputdir=${RESULTS_DIR}/${condition_type}_${control_type}/exp${replicate_number}
+outputdir="${RESULTS_DIR}/${condition_type}_${control_type}/exp${replicate_number}"
 
-
+mkdir ${outputdir}
 
 if [[ "$condition_type" == "damage_meta" ]]; then
 	condition_type="meta"  # remove the damage prefix

@@ -15,8 +15,8 @@ RESULTS_DIR=$4 # destination folder
 
 mkdir $RESULTS_DIR
 mkdir $RESULTS_DIR/${binary_type}_${control_type}
-outputdir=${RESULTS_DIR}/${binary_type}_${control_type}/exp${replicate_number}
-
+outputdir="${RESULTS_DIR}/${binary_type}_${control_type}/exp${replicate_number}"
+mkdir ${outputdir}
 binary=${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}_binary
 
 
