@@ -29,16 +29,9 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-/* params for the top-level map */
+/* params for the CMAES-CHECK;*/
 struct CMAESCHECKParams
 {
-    // grid properties, discretise 3 dimensions into 10 bins each
-    // struct ea {
-    //     SFERES_CONST size_t behav_dim = 2;
-    //     SFERES_ARRAY(size_t, behav_shape, 4, 4); // 16 cells based on two meta-descriptors
-    //     SFERES_CONST float epsilon = 0.00;
-    // };
-    // our values for each gait parameter can take on any one of these    ????????????????????
 
     struct evo_float // not used, but needed for compilation;
     {
@@ -60,9 +53,10 @@ struct CMAESCHECKParams
     // save map every 50 iterations
     struct pop
     {
-        SFERES_CONST unsigned nb_gen = 1001; // at most 1000 meta-generations
-        SFERES_CONST int dump_period = 1;    // every generation
-        SFERES_CONST int size = 5;           // number of maps
+        SFERES_CONST unsigned nb_gen = 1001;  // just for compilation 
+        SFERES_CONST int dump_period = 1;    
+        SFERES_CONST int size = 5;           
+        SFERES_CONST unsigned max_evals = 1000000; //  just for compilation 
     };
 
     // parameter limits between 1.0 and 2.0  ( avoids negative weights ! )
