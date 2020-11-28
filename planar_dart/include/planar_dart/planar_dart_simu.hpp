@@ -26,7 +26,10 @@
 
 #define JOINT_SIZE 8
 
-namespace planar_dart {
+#include <random>
+
+namespace planar_dart
+{
 
     BOOST_PARAMETER_TEMPLATE_KEYWORD(planar_control)
     BOOST_PARAMETER_TEMPLATE_KEYWORD(safety)
@@ -34,40 +37,42 @@ namespace planar_dart {
     BOOST_PARAMETER_TEMPLATE_KEYWORD(viz)
 
     typedef boost::parameter::parameters<boost::parameter::optional<tag::planar_control>,
-        boost::parameter::optional<tag::safety>,
-        boost::parameter::optional<tag::desc>,
-        boost::parameter::optional<tag::viz>> class_signature;
+                                         boost::parameter::optional<tag::safety>,
+                                         boost::parameter::optional<tag::desc>,
+                                         boost::parameter::optional<tag::viz>>
+        class_signature;
 
     template <typename Simu, typename robot>
-    struct Refresh {
-        Refresh(Simu& simu, std::shared_ptr<robot> rob, const Eigen::Vector6d& init_trans)
+    struct Refresh
+    {
+        Refresh(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             : _simu(simu), _robot(rob), _init_trans(init_trans) {}
 
-        Simu& _simu;
+        Simu &_simu;
         std::shared_ptr<robot> _robot;
         Eigen::Vector6d _init_trans;
 
         template <typename T>
-        void operator()(T& x) const { x(_simu, _robot, _init_trans); }
+        void operator()(T &x) const { x(_simu, _robot, _init_trans); }
     };
 
     template <class A1 = boost::parameter::void_, class A2 = boost::parameter::void_, class A3 = boost::parameter::void_, class A4 = boost::parameter::void_>
-    class planarDARTSimu {
+    class planarDARTSimu
+    {
     public:
-
         const int ISOMETRIC = 0, TOP = 1;
-
+        const double MAXDIST = 0.5425;
         using robot_t = std::shared_ptr<planar>;
         // defaults
-        struct defaults {
+        struct defaults
+        {
             using planar_control_t = control;
             // using safety_measures_t = boost::fusion::vector<safety_measures::MaxHeight, safety_measures::BodyColliding, safety_measures::TurnOver>;
             using safety_measures_t = boost::fusion::vector<safety_measures::LinkColliding>;
             using descriptors_t = boost::fusion::vector<planar_dart::descriptors::PositionalCoord,
-                                         planar_dart::descriptors::PolarCoord,
-                                         planar_dart::descriptors::JointPairAngle,
-                                         planar_dart::descriptors::AngleSum
-                                         >;
+                                                        planar_dart::descriptors::PolarCoord,
+                                                        planar_dart::descriptors::JointPairAngle,
+                                                        planar_dart::descriptors::AngleSum>;
             using viz_t = boost::fusion::vector<visualizations::TargetArrow>;
         };
 
@@ -81,13 +86,13 @@ namespace planar_dart {
         using descriptors_t = typename boost::mpl::if_<boost::fusion::traits::is_sequence<Descriptors>, Descriptors, boost::fusion::vector<Descriptors>>::type;
         using viz_t = typename boost::mpl::if_<boost::fusion::traits::is_sequence<Visualizations>, Visualizations, boost::fusion::vector<Visualizations>>::type;
 
-        planarDARTSimu(const std::vector<double>& ctrl, robot_t robot, std::vector<planar_dart::planarDamage> damages = {}) : _euclidean_distance(10000),
-                                                                          _world(std::make_shared<dart::simulation::World>()),
-                                                                          //_controller(ctrl, robot, damages),
-                                                                          _old_index(0),
-                                                                          _desc_period(2),
-                                                                          _break(false),
-                                                                          _variance_angles(0.0)
+        planarDARTSimu(const std::vector<double> &ctrl, robot_t robot, std::vector<planar_dart::planarDamage> damages = {}) : _euclidean_distance(10000),
+                                                                                                                              _world(std::make_shared<dart::simulation::World>()),
+                                                                                                                              //_controller(ctrl, robot, damages),
+                                                                                                                              _old_index(0),
+                                                                                                                              _desc_period(2),
+                                                                                                                              _break(false),
+                                                                                                                              _variance_angles(0.0)
         {
             _world->getConstraintSolver()->setCollisionDetector(dart::collision::DARTCollisionDetector::create());
             _robot = robot;
@@ -98,7 +103,6 @@ namespace planar_dart {
             _world->addSkeleton(_robot->skeleton());
             _world->setTimeStep(1);
             //_world->setTimeStep(0.05);
-
 
             add_wall();
             _controller.set_robot(robot);
@@ -125,7 +129,7 @@ namespace planar_dart {
             run();
         }
 
-        void run()
+        void run(bool random_target = false)
         {
             _break = false;
             robot_t rob = this->robot();
@@ -138,19 +142,18 @@ namespace planar_dart {
             if (true)
 #endif
             {
-                 _controller.update();
+                _controller.update();
 
                 _world->step(false);
-
-                
 
                 // update safety measures
                 boost::fusion::for_each(_safety_measures, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
                 // update visualizations
                 boost::fusion::for_each(_visualizations, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
 
-                if (_break) {
-                    _euclidean_distance = -10002.0;
+                if (_break)
+                {
+                    _euclidean_distance = -1;
                     _variance_angles = -10002.0;
                     return;
                 }
@@ -162,20 +165,32 @@ namespace planar_dart {
 #endif
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
-            Eigen::Vector3d _posi = rob->pos();
-            Eigen::Vector3d _bin(0.3875, 0.3875, 0.0);//link 6?
+            _final_pos = rob->gripper("final_pos")->getWorldPosition();
+            if (random_target)
+            {
+                std::mt19937 _twister(rd());
 
-            // updates values of covered distance average body height and arrival angle
-            _euclidean_distance = sqrt(pow((_posi[0] - _bin[0]),2) + pow((_posi[1] - _bin[1]),2));
+                std::uniform_real_distribution<> position_distribution(0, MAXDIST);
+                Eigen::Vector3d _bin(-position_distribution(_twister), MAXDIST - 2 * position_distribution(_twister), 0.0); // x in [-MAXDIST,0]; y in [-MAXDIST,MAXDIST]
+
+#ifdef GRAPHIC
+                std::cout << "choose random target " << _bin << std::endl;
+#endif
+                // // updates values of covered distance average body height and arrival angle
+                _euclidean_distance = (_final_pos - _bin).norm();
+            }
+
             std::vector<double> normalised_angles = _controller.parameters();
             double _mean_angles = 0.0;
-            for(size_t i = 0;i<JOINT_SIZE;++i){
+            for (size_t i = 0; i < JOINT_SIZE; ++i)
+            {
                 _mean_angles += normalised_angles[i];
             }
             _mean_angles /= JOINT_SIZE;
             _variance_angles = 0.0;
-            for(size_t i = 0;i<JOINT_SIZE;++i){
-                _variance_angles += pow((normalised_angles[i]- _mean_angles), 2);
+            for (size_t i = 0; i < JOINT_SIZE; ++i)
+            {
+                _variance_angles += pow((normalised_angles[i] - _mean_angles), 2);
             }
             _variance_angles /= JOINT_SIZE;
         }
@@ -191,21 +206,25 @@ namespace planar_dart {
         }
 
 #ifdef GRAPHIC
-        void fixed_camera(){
+        void fixed_camera()
+        {
             fixed_camera(view_setting);
         }
-        void fixed_camera( int view )
+        void fixed_camera(int view)
         {
             view_setting = view;
-            switch(0){
-                case 0: _camera_pos = Eigen::Vector3d(-1, -1, 1);
-                    _look_at = Eigen::Vector3d(0, 0, 0);
-                    _camera_up = Eigen::Vector3d(0, 0, 1);
-                    break;
-                case 1: _camera_pos = Eigen::Vector3d(-1, -1, 1);
-                    _look_at = Eigen::Vector3d(0, -0.25, 0);
-                    _camera_up = Eigen::Vector3d(0, 1, 0);
-                    break;
+            switch (0)
+            {
+            case 0:
+                _camera_pos = Eigen::Vector3d(-1, -1, 1);
+                _look_at = Eigen::Vector3d(0, 0, 0);
+                _camera_up = Eigen::Vector3d(0, 0, 1);
+                break;
+            case 1:
+                _camera_pos = Eigen::Vector3d(-1, -1, 1);
+                _look_at = Eigen::Vector3d(0, -0.25, 0);
+                _camera_up = Eigen::Vector3d(0, 1, 0);
+                break;
             }
 
             // set camera position
@@ -221,12 +240,15 @@ namespace planar_dart {
 #endif
 
         template <typename Desc, typename T>
-        void get_descriptor(T& result)
+        void get_descriptor(T &result)
         {
             auto d = boost::fusion::find<Desc>(_descriptors);
             (*d).get(result);
         }
-
+        Eigen::Vector3d final_position() const
+        {
+            return _final_pos;
+        }
         double euclidean_distance() const
         {
             return _euclidean_distance;
@@ -234,7 +256,7 @@ namespace planar_dart {
 
         double performance_val() const
         {
-            return -_variance_angles;//lower variance is more efficient
+            return -_variance_angles; //lower variance is more efficient
         }
 
         double step() const
@@ -264,14 +286,15 @@ namespace planar_dart {
             _break = disable;
         }
 
-        planar_control_t& controller()
+        planar_control_t &controller()
         {
             return _controller;
         }
 
         void clear_objects()
         {
-            for (auto obj : _objects) {
+            for (auto obj : _objects)
+            {
                 _world->removeSkeleton(obj);
             }
             _objects.clear();
@@ -279,15 +302,19 @@ namespace planar_dart {
 
     protected:
         // Helper function to squash dart warnings from console output
-        std::string _get_unique(std::string name) {
-            while (_world->getSkeleton(name) != nullptr) {
-                if (name[name.size() - 2] == '_') {
+        std::string _get_unique(std::string name)
+        {
+            while (_world->getSkeleton(name) != nullptr)
+            {
+                if (name[name.size() - 2] == '_')
+                {
                     int i = name.back() - '0';
                     i++;
                     name.pop_back();
                     name = name + std::to_string(i);
                 }
-                else {
+                else
+                {
                     name = name + "_1";
                 }
             }
@@ -295,7 +322,8 @@ namespace planar_dart {
             return name;
         }
 
-        void add_wall(){
+        void add_wall()
+        {
             if (_world->getSkeleton("wall") != nullptr)
                 return;
             dart::dynamics::SkeletonPtr slope = dart::dynamics::Skeleton::create("wall");
@@ -307,7 +335,7 @@ namespace planar_dart {
             double slope_width = 0.003;
             double slope_height = 0.1;
 
-            auto box = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(slope_width*500, slope_width, slope_height));
+            auto box = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(slope_width * 500, slope_width, slope_height));
 
             auto box_node = sbody->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(box);
 
@@ -336,6 +364,7 @@ namespace planar_dart {
         descriptors_t _descriptors;
         viz_t _visualizations;
         std::vector<dart::dynamics::SkeletonPtr> _objects;
+        std::random_device rd;
 
 #ifdef GRAPHIC
         bool _fixed_camera;
@@ -347,6 +376,6 @@ namespace planar_dart {
         int view_setting;
 #endif
     };
-}
+} // namespace planar_dart
 
 #endif

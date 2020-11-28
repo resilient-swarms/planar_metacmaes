@@ -22,6 +22,7 @@ struct RecoveredPerformance
 
     static float _eval_single_envir(const Phen &indiv, size_t damage_option)
     {
+
         // copy of controller's parameters
         std::vector<double> _ctrl;
         _ctrl.clear();
@@ -40,11 +41,13 @@ struct RecoveredPerformance
         simulator_t simu(_ctrl, robot);
 #else
         auto robot = global::damaged_robots[damage_option]->clone();
+        // generate random target
+        
         simulator_t simu(_ctrl, robot, global::damage_sets[damage_option]);
 #endif
 
-        simu.run();
-        float fitness = simu.performance_val();
+        simu.run(true);
+        float fitness = simu.euclidean_distance();// distance to target
 
         // these assume a behaviour descriptor of size 6.
         if (fitness < -1000)
