@@ -6,4 +6,4 @@
 #SBATCH --time=24:00:00         # walltime
 #SBATCH --job-name=planar_test
 
-singularity exec planar_metacmaes_installed.sif bash run_metacmaes_test.sh $1 $2 $3 $4 $5
+singularity exec planar_metacmaes_installed.sif bash run_metacmaes_test.sh "$1" "$2" "$3" "$4" "$5"

@@ -94,10 +94,10 @@ cd ${SFERES_DIR}
 
 - Control Variables for building binaries
     * `BUILD_PHASE`: 
-     - "TEST": test for recovery from all test-set damages (not seen in meta-evolution)
-     - "TRAIN": test for recovery from all train-set damages (seen in meta-evolution)
-     - "INDIVIDUAL_DAMAGE": for each individual damage, random search for the best recovery solution
-     - any other string: evolution
+      - "TEST": test for recovery from all test-set damages (not seen in meta-evolution)
+      - "TRAIN": test for recovery from all train-set damages (seen in meta-evolution)
+      - "INDIVIDUAL_DAMAGE": for each individual damage, random search for the best recovery solution
+      - any other string: evolution
     * `BUILD_TYPE`: in case BUILD_PHASE=evolution, determines the type of condition,
       - "damage_meta": Building for meta conditions
       - "random": Building the random control condition
