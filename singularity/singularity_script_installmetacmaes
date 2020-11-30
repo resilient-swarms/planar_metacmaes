@@ -9,7 +9,7 @@ From: planar_metacmaes.sif
  export NUM_CORES=40
  echo "will use $NUM_CORES cores"
 
-cd $HOME_CONTAINER/planar_metacmaes/planar_dart/
+cd $HOME_CONTAINER/planar_metacmaes
 git pull
 cp -avr $HOME_CONTAINER/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
 cp -avr $HOME_CONTAINER/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
@@ -30,7 +30,7 @@ cd $SFERES_DIR
  
  # build random
 export BUILD_TYPE=random
-cd $HOME_CONTAINER/planar_metacmaes/planar_dart/
+cd $HOME_CONTAINER/planar_metacmaes
 ./waf configure --prefix=$BOTS_DIR 
 ./waf
 ./waf install
@@ -40,7 +40,7 @@ cd $SFERES_DIR
 
   # build random
 export BUILD_TYPE=control
-cd $HOME_CONTAINER/planar_metacmaes/planar_dart/
+cd $HOME_CONTAINER/planar_metacmaes
 ./waf configure --prefix=$BOTS_DIR
 ./waf
 ./waf install
