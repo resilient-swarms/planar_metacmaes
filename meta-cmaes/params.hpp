@@ -13,7 +13,7 @@ using namespace sferes::gen::evo_float;
 struct BottomParams
 {
 #if META()
-    static const size_t MAX_DATABASE_SIZE = 500000;
+    static const size_t MAX_DATABASE_SIZE = std::pow(3,14); //500000;// matches the 3^14 bins in the database
     static const size_t bottom_epochs = 5;
 #endif
     // grid properties, discretise 3 dimensions into 10 bins each
@@ -34,7 +34,7 @@ struct BottomParams
         SFERES_CONST float epsilon = 0.00f;
     };
 
-    // our values for each gait parameter can take on any one of these    ????????????????????
+    // our values for each gait parameter can take on any one of these
     struct sampled
     {
         SFERES_ARRAY(float, values, 0.00f, 0.025f, 0.05f, 0.075f, 0.10f, 0.125f, 0.15f, 0.175f,
@@ -114,7 +114,6 @@ struct CMAESParams
         SFERES_CONST unsigned max_evals = 40000000 ;//40M is equal to the bottomparams: 400*100000
     };
 
-    // parameter limits between 1.0 and 2.0  ( avoids negative weights ! )
     struct parameters
     {
         SFERES_CONST float min = 0.0f;

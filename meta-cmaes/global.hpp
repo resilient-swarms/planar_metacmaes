@@ -182,7 +182,9 @@ namespace global
     
 #if META()
     typedef SampledDataEntry data_entry_t;
-    typedef CircularBuffer<BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
+    //<size_t num_base_features, size_t capacity, typename DataType>
+    //typedef CircularBuffer<BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
+    typedef BestKPerBin<NUM_BASE_FEATURES,BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
     database_t database;
 
 #endif
