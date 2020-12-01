@@ -36,6 +36,7 @@
 #endif
 #endif
 
+
 #include <boost/random.hpp>
 #include <iostream>
 #include <mutex>
@@ -81,7 +82,6 @@ typedef boost::fusion::vector<sferes::stat::Map<phen_t, BottomParams>> stat_t;
 typedef modif::Dummy<> modifier_t;
 typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> ea_t;
 #endif
-
 #include <sferes/run.hpp>
 
 using namespace sferes;
@@ -91,11 +91,7 @@ int main(int argc, char **argv)
     std::srand(atoi(argv[1]));
     ea_t ea;
 #ifdef PARALLEL_RUN
-#if META()
-    sferes::eval::init_shared_mem<sferes::eval::CSharedMem>();
-#else
-    sferes::eval::init_shared_mem<sferes::eval::CSharedMemPosition>();
-#endif
+    sferes::eval::init_shared_mem<shared_memory_t>();
 #endif
 
 
