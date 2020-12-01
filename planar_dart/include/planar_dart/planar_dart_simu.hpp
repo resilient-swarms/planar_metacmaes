@@ -165,7 +165,7 @@ namespace planar_dart
 #endif
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
-            _final_pos = rob->gripper("final_pos")->getWorldPosition();
+            _final_pos = rob->gripper("final_pos")->getWorldPosition().head(2);
             if (random_target)
             {
                 std::mt19937 _twister(rd());
@@ -245,9 +245,9 @@ namespace planar_dart
             auto d = boost::fusion::find<Desc>(_descriptors);
             (*d).get(result);
         }
-        Eigen::Vector3d final_position() const
+        Eigen::VectorXd final_position() const
         {
-            return _final_pos;
+            return _final_pos;// either empty or 2d, use for pairwisedist
         }
         double euclidean_distance() const
         {
@@ -351,7 +351,7 @@ namespace planar_dart
         }
 
         robot_t _robot;
-        Eigen::Vector3d _final_pos;
+        Eigen::VectorXd _final_pos;
         Eigen::Vector3d _final_rot;
         double _euclidean_distance;
         double _variance_angles;

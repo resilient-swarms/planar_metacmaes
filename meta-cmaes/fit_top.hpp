@@ -50,24 +50,6 @@ public:
 
     bool dead() { return false; }
 
-    template <typename Phen>
-    static float _eval_all(Phen &indiv)
-    {
-        return sferes::fit::PairwiseDist<Phen>::_eval_all(indiv);
-    }
-
-    std::tuple<float, size_t> avg_value(float val, size_t num_individuals)
-    {
-
-#ifdef EVAL_ENVIR
-        _nb_evals = num_individuals * global::world_options.size(); // no need to divide
-#else
-        _nb_evals = num_individuals * global::damage_sets.size(); // no need to divide
-#endif
-        val = val / (float)(_nb_evals);
-        return std::tuple<float, size_t>{val, _nb_evals};
-    }
-
     inline void set_fitness(float fFitness)
     {
 #if CONTROL()
@@ -88,11 +70,10 @@ protected:
     template <typename MetaIndiv>
     void _eval(MetaIndiv &meta_indiv)
     {
-        float avg_fitness = 0.0f;
 #ifdef PARALLEL_RUN
-        typedef sferes::eval::_eval_parallel_meta<MetaIndiv, sferes::fit::FitTop<CMAESParams>> top_eval_helper_t;
+        typedef sferes::eval::_eval_parallel_meta<MetaIndiv> top_eval_helper_t;
 #else
-        typedef sferes::eval::_eval_serial_meta<MetaIndiv, sferes::fit::FitTop<CMAESParams>> top_eval_helper_t;
+        typedef sferes::eval::_eval_serial_meta<MetaIndiv> top_eval_helper_t;
 #endif
         auto helper = top_eval_helper_t(meta_indiv); //allow parallelisation over individuals (_parallel_eval_meta)
         set_fitness(helper.value);

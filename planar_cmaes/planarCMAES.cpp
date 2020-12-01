@@ -91,7 +91,11 @@ int main(int argc, char **argv)
     std::srand(atoi(argv[1]));
     ea_t ea;
 #ifdef PARALLEL_RUN
-    sferes::eval::init_shared_mem();
+#if META()
+    sferes::eval::init_shared_mem<sferes::eval::CSharedMem>();
+#else
+    sferes::eval::init_shared_mem<sferes::eval::CSharedMemPosition>();
+#endif
 #endif
 
 
