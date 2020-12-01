@@ -30,9 +30,9 @@ namespace sferes
         public:
             FitBottom() : _dead(false){};
 #if META()
-            weight_t W;
+            feature_map_t feature_map;
 
-            FitBottom(const weight_t &w) : W(w), _dead(false)
+            FitBottom(const feature_map_t &fm) : feature_map(fm), _dead(false)
             {
             }
 #endif
@@ -121,22 +121,12 @@ namespace sferes
 
 #if META()
                 //std::cout << "META "<<std::endl;
-                bottom_features_t D = W * b;
+                bottom_features_t D = feature_map.out(b);
 #elif GLOBAL_WEIGHT()
                 //std::cout << "random "<<std::endl;
-                bottom_features_t D = global::W * b;
+                bottom_features_t D = global::feature_map.out(b);
 #endif
                 std::vector<float> vec(D.data(), D.data() + D.rows() * D.cols());
-#ifdef PRINTING
-                std::cout << " getting descriptor " << std::endl;
-#if META()
-                std::cout << " w =  " << W << std::endl;
-#elif GLOBAL_WEIGHT()
-                std::cout << " w =  " << global::W << std::endl;
-#endif
-                std::cout << " b = " << b << std::endl;
-                std::cout << " D = " << D << std::endl;
-#endif
                 return vec;
             }
 #endif  // WEIGHT()

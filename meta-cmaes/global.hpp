@@ -5,6 +5,7 @@
 #include <planar_dart/descriptors.hpp>
 #include <planar_dart/planar.hpp>
 #include <meta-cmaes/feature_vector_typedefs.hpp>
+#include <meta-cmaes/feature_map.hpp>
 
 #if META()
 #include <meta-cmaes/database.hpp>
@@ -38,43 +39,43 @@ namespace global
         {
             condition = ConditionType::meta;
             assert(META());
-            assert(BEHAV_DIM==4);
+            assert(BEHAV_DIM == 4);
         }
         else if (cond == "rand")
         {
             condition = ConditionType::rand;
             assert(GLOBAL_WEIGHT());
-            assert(BEHAV_DIM==4);
+            assert(BEHAV_DIM == 4);
         }
         else if (cond == "pos")
         {
             condition = ConditionType::pos;
             assert(CONTROL());
-            assert(BEHAV_DIM==2);
+            assert(BEHAV_DIM == 2);
         }
         else if (cond == "pol")
         {
             condition = ConditionType::pol;
             assert(CONTROL());
-            assert(BEHAV_DIM==2);
+            assert(BEHAV_DIM == 2);
         }
         else if (cond == "jpa")
         {
             condition = ConditionType::jpa;
             assert(CONTROL());
-            assert(BEHAV_DIM==4);
+            assert(BEHAV_DIM == 4);
         }
         else if (cond == "rjpa")
         {
             condition = ConditionType::rjpa;
             assert(CONTROL());
-            assert(BEHAV_DIM==4);
+            assert(BEHAV_DIM == 4);
         }
         else if (cond == "as")
         {
             condition = ConditionType::as;
             assert(CONTROL());
-            assert(BEHAV_DIM==6);
+            assert(BEHAV_DIM == 6);
         }
         else
         {
@@ -130,33 +131,12 @@ namespace global
     }
 #endif
 #if GLOBAL_WEIGHT()
-    weight_t W;
+    feature_map_t feature_map;
     void init_weight(std::string seed, std::string robot_file)
     {
         std::ofstream ofs("global_weight_" + seed + ".txt");
-        W = weight_t::Random();                //random numbers between (-1,1)
-        W = (W + weight_t::Constant(1.)) / 2.; // add 1 to the matrix to have values between 0 and 2; divide by 2 --> [0,1]
-        size_t count = 0;
-#ifdef PRINTING
-        std::cout << "before conversion " << std::endl;
-#endif
-        for (size_t j = 0; j < NUM_BOTTOM_FEATURES; ++j)
-        {
-            float sum = W.block<1, NUM_BASE_FEATURES>(j, 0).sum();
-            for (size_t k = 0; k < NUM_BASE_FEATURES; ++k)
-            {
-                W(j, k) = W(j, k) / sum; // put it available for the MapElites parent class
-
-#ifdef PRINTING
-                std::cout << "sum " << sum << std::endl;
-                std::cout << W(j, k) << "," << std::endl;
-#endif
-                ++count;
-            }
-        }
-        ofs << W;
-        std::cout << "global weight: " << std::endl;
-        std::cout << W << std::endl;
+        feature_map = feature_map_t::random();
+        feature_map.print_weights(ofs);
     }
 #endif
 
@@ -175,16 +155,15 @@ namespace global
 #endif
     }
 
-
 #if META() || CMAES_CHECK()
     cmaes_t evo;
 #endif
-    
+
 #if META()
     typedef SampledDataEntry data_entry_t;
     //<size_t num_base_features, size_t capacity, typename DataType>
     //typedef CircularBuffer<BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
-    typedef BestKPerBin<NUM_BASE_FEATURES,BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
+    typedef BestKPerBin<NUM_BASE_FEATURES, BottomParams::MAX_DATABASE_SIZE, data_entry_t> database_t;
     database_t database;
 
 #endif
