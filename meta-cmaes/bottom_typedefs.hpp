@@ -35,10 +35,8 @@ typedef boost::fusion::vector<planar_dart::safety_measures::LinkColliding> base_
 typedef boost::fusion::vector<planar_dart::descriptors::PositionalCoord, planar_dart::descriptors::PolarCoord,  planar_dart::descriptors::JointPairAngle,  planar_dart::descriptors::RelativeJointPairAngle, planar_dart::descriptors::AngleSum> base_desc_t;
 typedef planar_dart::control base_controller_t;
 typedef planar_dart::planarDARTSimu<planar_dart::safety<base_safe_t>, planar_dart::desc<base_desc_t>> simulator_t;
-#if META()
-    typedef sferes::eval::CSharedMemPosition shared_memory_t ;
-#else
-    typedef sferes::eval::CSharedMem shared_memory_t ;
-#endif
+
+typedef sferes::eval::CSharedMemPosition shared_memory_t ;
+
 
 #endif

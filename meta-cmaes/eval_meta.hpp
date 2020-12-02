@@ -11,7 +11,7 @@
 #include <meta-cmaes/pairwisedist.hpp>
 #include <Eigen/Dense>
 
-#define CHECK_PARALLEL
+//#define CHECK_PARALLEL
 
 namespace sferes
 {
