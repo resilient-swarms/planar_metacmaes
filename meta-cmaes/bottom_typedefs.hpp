@@ -36,7 +36,11 @@ typedef boost::fusion::vector<planar_dart::descriptors::PositionalCoord, planar_
 typedef planar_dart::control base_controller_t;
 typedef planar_dart::planarDARTSimu<planar_dart::safety<base_safe_t>, planar_dart::desc<base_desc_t>> simulator_t;
 
-typedef sferes::eval::CSharedMemPosition shared_memory_t ;
+#if META()	
+     typedef sferes::eval::CSharedMemPosition shared_memory_t ;	typedef sferes::eval::CSharedMemPosition shared_memory_t ;
+#else	
+     typedef sferes::eval::CSharedMem shared_memory_t ;	
+#endif
 
 
 #endif
