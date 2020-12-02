@@ -82,6 +82,8 @@ typedef boost::fusion::vector<sferes::stat::Map<phen_t, BottomParams>> stat_t;
 typedef modif::Dummy<> modifier_t;
 typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> ea_t;
 #endif
+
+#include <meta-cmaes/bottom_typedefs.hpp>
 #include <sferes/run.hpp>
 
 using namespace sferes;
