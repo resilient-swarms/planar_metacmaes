@@ -20,24 +20,28 @@ namespace sferes
         {
             static float compute(std::vector<Eigen::VectorXd> positions)
             {
+                if (positions.size() <= 1)
+                {
+                    return 0.0f;
+                }
                 float dist = 0.0f;
-                size_t num_comps=(positions.size() - 1)*positions.size()/2;
-                for (size_t i=0; i < positions.size() - 1; ++i)
+                size_t num_comps = (positions.size() - 1) * positions.size() / 2;
+                for (size_t i = 0; i < positions.size() - 1; ++i)
                 {
                     Eigen::VectorXd pos = positions[i];
                     if (pos.size() == 0)
-                        continue;//counts as 0
-                    for (size_t j=i+1; j < positions.size(); ++j)
+                        continue; //counts as 0
+                    for (size_t j = i + 1; j < positions.size(); ++j)
                     {
                         Eigen::VectorXd pos2 = positions[j];
                         if (pos2.size() == 0)
-                            continue;//counts as 0
+                            continue; //counts as 0
                         dist += (pos - pos2).norm();
                     }
                 }
-                return dist/(float) num_comps;
+                return dist / (float)num_comps;
             }
-            static std::tuple<Eigen::VectorXd,bool> _eval_single_envir(const Phen &indiv, size_t damage_option)
+            static std::tuple<Eigen::VectorXd, bool> _eval_single_envir(const Phen &indiv, size_t damage_option)
             {
 
                 // copy of controller's parameters
@@ -57,7 +61,7 @@ namespace sferes
 #endif
 
                 simu.run();
-                return std::tuple<Eigen::VectorXd,bool>{simu.final_position(), simu.euclidean_distance() == -1};
+                return std::tuple<Eigen::VectorXd, bool>{simu.final_position(), simu.euclidean_distance() == -1};
             }
         };
 
