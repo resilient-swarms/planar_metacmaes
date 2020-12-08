@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 #if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
-    param_ctrl = init_parameter_control<BottomParams, CMAESParams>(std::string(argv[2]));
+    param_ctrl = init_parameter_control<phen_t,BottomParams, CMAESParams>(std::string(argv[2]));
 #endif
 #endif
 

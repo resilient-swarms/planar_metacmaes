@@ -22,9 +22,9 @@ namespace sferes
         {
             size_t nb_evals;
             float value;
-            _eval_serial_meta(Phen &meta_i)
+            _eval_serial_meta(Phen &meta_i, float percent)
             {
-                std::vector<boost::shared_ptr<base_phen_t>> pop = meta_i.sample_individuals();
+                std::vector<boost::shared_ptr<base_phen_t>> pop = meta_i.sample_individuals(percent);
                 float fit = 0.0f;
                 for (size_t j = 0; j < global::damage_sets.size(); ++j)
                 {
@@ -51,9 +51,8 @@ namespace sferes
             size_t nb_evals;
             Phen meta_indiv;
             size_t damage_index;
-            _eval_parallel_meta(Phen &meta_i)
+            _eval_parallel_meta(Phen &meta_i, float percent)
             { //now join the bottom-level fitnesses
-                meta_indiv = meta_i;
                 this->_pop = meta_i.sample_individuals();
                 value = 0.0f;
                 for (size_t j = 0; j < global::damage_sets.size(); ++j)
@@ -100,14 +99,13 @@ namespace sferes
                     //Fit::add_metaeval_to_database(*this->_pop[i]);
 
 #ifdef CHECK_PARALLEL
-                    if(dead)
+                    if (dead)
                     {
-                        std::cout << "parent position " << i << " " << positions.back() << std::endl;        
+                        std::cout << "parent position " << i << " " << positions.back() << std::endl;
                     }
                     else
                     {
-                        std::cout << "parent position " << i << " " << positions.back().transpose() << std::endl;        
-                   
+                        std::cout << "parent position " << i << " " << positions.back().transpose() << std::endl;
                     }
                     std::cout << "parent death " << i << " " << dead << std::endl;
 #endif

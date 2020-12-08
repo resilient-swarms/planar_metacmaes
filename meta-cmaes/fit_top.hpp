@@ -28,6 +28,7 @@ SFERES_FITNESS(FitTop, sferes::fit::Fitness)
 #endif
 {
 public:
+    float percentage;
     /* current bottom-level map (new candidate to be added to _pop)*/
     template <typename MetaIndiv>
     void eval(MetaIndiv &indiv)
@@ -75,7 +76,7 @@ protected:
 #else
         typedef sferes::eval::_eval_serial_meta<MetaIndiv> top_eval_helper_t;
 #endif
-        auto helper = top_eval_helper_t(meta_indiv); //allow parallelisation over individuals (_parallel_eval_meta)
+        auto helper = top_eval_helper_t(meta_indiv,percentage); //allow parallelisation over individuals (_parallel_eval_meta)
         set_fitness(helper.value);
         _nb_evals = helper.nb_evals;
 #ifdef PRINTING

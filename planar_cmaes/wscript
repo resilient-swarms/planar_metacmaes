@@ -113,22 +113,37 @@ def _build_evolution(bld):
 	if os.environ.get('BUILD_GRAPHICS',"False") == "True":
 		cxxflags+=["-DGRAPHIC"]
 		libs += 'DART_GRAPHIC'
+	ADDITIONAL_GENES = os.environ.get('ADDITIONAL_GENES',"0")
 	#define LINEAR 0
 	#define SELECTION 1
 	#define NONLINEAR 2
 	featuremaps = {0: 'linfm',1: 'selectionfm', 2: 'nonlinfm'}
 	if os.environ.get('BUILD_TYPE',"False") == "damage_meta":
 		for key, val in featuremaps.items():
-			sferes.create_variants(bld,
-								source = 'planarCMAES.cpp',
-								use = 'sferes2',
-								uselib = libs,
-								target = 'planarCMAES_damage_meta_'+val,
-								cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
-								"-DEXPERIMENT_TYPE=0",
-								"-DNUM_CORES="+str(num_cores),
-								"-DFEATUREMAP="+str(key)],   # -march=native
-								variants = ['BINARY'])
+			if ADDITIONAL_GENES == 0:
+				sferes.create_variants(bld,
+									source = 'planarCMAES.cpp',
+									use = 'sferes2',
+									uselib = libs,
+									target = 'planarCMAES_damage_meta_'+val,
+									cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
+									"-DEXPERIMENT_TYPE=0",
+									"-DNUM_CORES="+str(num_cores),
+									"-DFEATUREMAP="+str(key),
+									"-DADDITIONAL_GENES="+ADDITIONAL_GENES],   # -march=native
+									variants = ['BINARY'])
+			else:
+				sferes.create_variants(bld,
+									source = 'planarCMAES.cpp',
+									use = 'sferes2',
+									uselib = libs,
+									target = 'planarCMAES_damage_meta_'+val+"_added"+ADDITIONAL_GENES+"genes",
+									cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
+									"-DEXPERIMENT_TYPE=0",
+									"-DNUM_CORES="+str(num_cores),
+									"-DFEATUREMAP="+str(key),
+									"-DADDITIONAL_GENES="+ADDITIONAL_GENES],   # -march=native
+									variants = ['BINARY'])
 
 	elif os.environ.get('BUILD_TYPE',"False") == "random": 
 		for key, val in featuremaps.items():

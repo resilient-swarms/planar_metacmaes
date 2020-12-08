@@ -23,7 +23,11 @@ typedef Eigen::Matrix<size_t, NUM_BOTTOM_FEATURES, 1, Eigen::DontAlign, NUM_BOTT
 #if FEATUREMAP == NONLINEAR
 
 const int NUM_HIDDEN = 10; //number of hidden units
+#if ADDITIONAL_GENES > 0
+const int NUM_GENES = NUM_BASE_FEATURES * NUM_HIDDEN + NUM_HIDDEN * NUM_BOTTOM_FEATURES + 2 + ADDITIONAL_GENES;
+#else
 const int NUM_GENES = NUM_BASE_FEATURES * NUM_HIDDEN + NUM_HIDDEN * NUM_BOTTOM_FEATURES + 2;
+#endif
 /* weights to construct bottom-level map features from base_features */
 typedef Eigen::Matrix<float, NUM_HIDDEN, NUM_BASE_FEATURES, Eigen::DontAlign, NUM_HIDDEN, NUM_BASE_FEATURES> weight1_t;
 typedef Eigen::Matrix<float, NUM_BOTTOM_FEATURES, NUM_HIDDEN, Eigen::DontAlign, NUM_BOTTOM_FEATURES, NUM_HIDDEN> weight2_t;
@@ -36,7 +40,12 @@ struct Weights
 };
 typedef Weights weight_t;
 #else
+
+#if ADDITIONAL_GENES > 0
+const int NUM_GENES = NUM_BASE_FEATURES * NUM_BOTTOM_FEATURES + ADDITIONAL_GENES;
+#else
 const int NUM_GENES = NUM_BASE_FEATURES * NUM_BOTTOM_FEATURES;
+#endif
 /* weights to construct bottom-level map features from base_features */
 typedef Eigen::Matrix<float, NUM_BOTTOM_FEATURES, NUM_BASE_FEATURES, Eigen::DontAlign, NUM_BOTTOM_FEATURES, NUM_BASE_FEATURES> weight_t;
 #endif
