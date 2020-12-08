@@ -25,7 +25,6 @@ namespace sferes
                     return 0.0f;
                 }
                 float dist = 0.0f;
-                size_t num_comps = (positions.size() - 1) * positions.size() / 2;
                 for (size_t i = 0; i < positions.size() - 1; ++i)
                 {
                     Eigen::VectorXd pos = positions[i];
@@ -39,7 +38,7 @@ namespace sferes
                         dist += (pos - pos2).norm();
                     }
                 }
-                return dist / (float)num_comps;
+                return dist;// no averaging over comparisons so that maps with high coverage and high pairwise distance are best
             }
             static std::tuple<Eigen::VectorXd, bool> _eval_single_envir(const Phen &indiv, size_t damage_option)
             {
