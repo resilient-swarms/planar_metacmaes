@@ -44,9 +44,9 @@ struct BottomParams
                      0.725f, 0.75f, 0.775f, 0.80f, 0.825f, 0.85f, 0.875f,
                      0.90f, 0.925f, 0.95f, 0.975f, 1.0f);
 
-        SFERES_CONST float mutation_rate = 0.05f;
+        SFERES_CONST float mutation_rate = 0.125f;//1 divided by number of genes
         SFERES_CONST float cross_rate = 0.00f;
-        SFERES_CONST bool ordered = false;
+        SFERES_CONST bool ordered = true;//increment or decrement rather than random selection
     };
 
     struct pop

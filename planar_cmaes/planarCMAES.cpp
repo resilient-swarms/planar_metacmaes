@@ -85,6 +85,38 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 
 #include <meta-cmaes/bottom_typedefs.hpp>
 #include <sferes/run.hpp>
+#include <meta-cmaes/top_typedefs.hpp>
+
+namespace sferes
+{
+namespace gen
+{
+template <>
+void bottom_gen_t::mutate()
+{
+    if (BottomParams::sampled::ordered)
+    {
+        for (size_t i = 0; i < _data.size(); ++i)
+            if (misc::rand<float>() < param_ctrl->get_mutation_rate())
+            {
+                if (misc::flip_coin())
+                    _data[i] = std::max(0, (int)_data[i] - 1);
+                else
+                    _data[i] = std::min((int)BottomParams::sampled::values_size() - 1,
+                                        (int)_data[i] + 1);
+            }
+    }
+    else
+    {
+        BOOST_FOREACH (size_t &v, _data)
+            if (misc::rand<float>() < param_ctrl->get_mutation_rate())
+                v = misc::rand<size_t>(0, BottomParams::sampled::values_size());
+        _check_invariant();
+    }
+    _check_invariant();
+}
+}
+}
 
 using namespace sferes;
 
