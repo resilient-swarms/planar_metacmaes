@@ -85,8 +85,9 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 
 #include <meta-cmaes/bottom_typedefs.hpp>
 #include <sferes/run.hpp>
+#if META()
 #include <meta-cmaes/top_typedefs.hpp>
-
+#endif
 namespace sferes
 {
 namespace gen
@@ -97,7 +98,13 @@ void bottom_gen_t::mutate()
     if (BottomParams::sampled::ordered)
     {
         for (size_t i = 0; i < _data.size(); ++i)
-            if (misc::rand<float>() < sferes::eval::param_ctrl->get_mutation_rate())
+	{
+#if META()
+	    float mutation_rate = sferes::eval::param_ctrl->get_mutation_rate();
+#else
+	    float mutation_rate = BottomParams::sampled::mutation_rate;
+#endif
+            if (misc::rand<float>() < mutation_rate)
             {
                 if (misc::flip_coin())
                     _data[i] = std::max(0, (int)_data[i] - 1);
@@ -105,11 +112,17 @@ void bottom_gen_t::mutate()
                     _data[i] = std::min((int)BottomParams::sampled::values_size() - 1,
                                         (int)_data[i] + 1);
             }
+       }
     }
     else
     {
+#if META()
+	float mutation_rate = sferes::eval::param_ctrl->get_mutation_rate();
+#else
+	float mutation_rate = BottomParams::sampled::mutation_rate;
+#endif
         BOOST_FOREACH (size_t &v, _data)
-            if (misc::rand<float>() < sferes::eval::param_ctrl->get_mutation_rate())
+            if (misc::rand<float>() < mutation_rate)
                 v = misc::rand<size_t>(0, BottomParams::sampled::values_size());
         _check_invariant();
     }
