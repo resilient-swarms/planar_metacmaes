@@ -97,7 +97,7 @@ void bottom_gen_t::mutate()
     if (BottomParams::sampled::ordered)
     {
         for (size_t i = 0; i < _data.size(); ++i)
-            if (misc::rand<float>() < param_ctrl->get_mutation_rate())
+            if (misc::rand<float>() < sferes::eval::param_ctrl->get_mutation_rate())
             {
                 if (misc::flip_coin())
                     _data[i] = std::max(0, (int)_data[i] - 1);
@@ -109,7 +109,7 @@ void bottom_gen_t::mutate()
     else
     {
         BOOST_FOREACH (size_t &v, _data)
-            if (misc::rand<float>() < param_ctrl->get_mutation_rate())
+            if (misc::rand<float>() < sferes::eval::param_ctrl->get_mutation_rate())
                 v = misc::rand<size_t>(0, BottomParams::sampled::values_size());
         _check_invariant();
     }
@@ -122,7 +122,8 @@ using namespace sferes;
 
 int main(int argc, char **argv)
 {
-    std::srand(atoi(argv[1]));
+    long seed = atoi(argv[1]);
+    std::srand(seed);
     ea_t ea;
 #ifdef PARALLEL_RUN
     sferes::eval::init_shared_mem<shared_memory_t>();
@@ -139,7 +140,7 @@ int main(int argc, char **argv)
 #if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
-    param_ctrl = init_parameter_control<phen_t,BottomParams, CMAESParams>(std::string(argv[2]));
+    sferes::eval::param_ctrl = init_parameter_control<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>(seed,std::string(argv[2]));
 #endif
 #endif
 
