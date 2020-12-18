@@ -87,6 +87,23 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 #include <sferes/run.hpp>
 #if META()
 #include <meta-cmaes/top_typedefs.hpp>
+
+
+BOOST_CLASS_EXPORT_IMPLEMENT(MutationAnnealing)
+BOOST_CLASS_EXPORT_IMPLEMENT(EpochAnnealing)
+BOOST_CLASS_EXPORT_IMPLEMENT(MutationEndogenous)
+BOOST_CLASS_EXPORT_IMPLEMENT(EpochEndogenous)
+BOOST_CLASS_EXPORT_IMPLEMENT(RL)
+BOOST_CLASS_EXPORT_IMPLEMENT(RLController)
+
+//BOOST_CLASSS_EXPORT_KEY(MutationAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
+//BOOST_CLASSS_EXPORT_IMPLEMENT(MutationAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
+
+//BOOST_CLASSS_EXPORT_KEY(EpochAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
+//BOOST_CLASSS_EXPORT_IMPLEMENT(EpochAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
+
+//BOOST_CLASSS_EXPORT_KEY(ParameterControl<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
+//BOOST_CLASSS_EXPORT_IMPLEMENT(ParameterControl<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
 #endif
 namespace sferes
 {
@@ -131,6 +148,11 @@ void bottom_gen_t::mutate()
 }
 }
 
+
+
+
+
+
 using namespace sferes;
 
 int main(int argc, char **argv)
@@ -153,7 +175,7 @@ int main(int argc, char **argv)
 #if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
-    sferes::eval::param_ctrl = init_parameter_control<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>(seed,std::string(argv[2]));
+    sferes::eval::param_ctrl = init_parameter_control(seed,std::string(argv[2]));
 #endif
 #endif
 
