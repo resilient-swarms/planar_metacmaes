@@ -96,14 +96,6 @@ BOOST_CLASS_EXPORT_IMPLEMENT(EpochEndogenous)
 BOOST_CLASS_EXPORT_IMPLEMENT(RL)
 BOOST_CLASS_EXPORT_IMPLEMENT(RLController)
 
-//BOOST_CLASSS_EXPORT_KEY(MutationAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
-//BOOST_CLASSS_EXPORT_IMPLEMENT(MutationAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
-
-//BOOST_CLASSS_EXPORT_KEY(EpochAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
-//BOOST_CLASSS_EXPORT_IMPLEMENT(EpochAnnealing<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
-
-//BOOST_CLASSS_EXPORT_KEY(ParameterControl<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
-//BOOST_CLASSS_EXPORT_IMPLEMENT(ParameterControl<sferes::eval::EvalStats,phen_t,BottomParams, CMAESParams>)
 #endif
 namespace sferes
 {
