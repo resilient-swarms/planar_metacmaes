@@ -222,7 +222,7 @@ namespace sferes
 
                 float dead = -1000.0f;
                 // these assume a behaviour descriptor of size 6.
-                if (dead > this->_value)
+                if (simu.dead())
                 {
                     // this means that something bad happened in the simulation
                     // we kill this individual

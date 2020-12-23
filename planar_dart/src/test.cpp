@@ -50,9 +50,10 @@ int main(int argc, char **argv)
                                          planar_dart::descriptors::ConstantLow,
                                           planar_dart::descriptors::Genotype,
                                            planar_dart::descriptors::NoisyGenotype,
-                                           planar_dart::descriptors::RandomVal>;
+                                           planar_dart::descriptors::RandomVal>; 
 
-    // using safe_t = boost::fusion::vector<planar_dart::safety_measures::BodyColliding, planar_dart::safety_measures::MaxHeight, planar_dart::safety_measures::TurnOver>;
+
+    using safe_t = boost::fusion::vector<planar_dart::safety_measures::LinkColliding>;
     using viz_t = boost::fusion::vector<planar_dart::visualizations::TargetArrow>;
     planar_dart::planarDARTSimu<planar_dart::desc<desc_t>, planar_dart::viz<viz_t>> simu(ctrl, global_robot);
 

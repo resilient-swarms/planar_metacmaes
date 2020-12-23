@@ -96,7 +96,6 @@ namespace planar_dart
         {
             _world->getConstraintSolver()->setCollisionDetector(dart::collision::DARTCollisionDetector::create());
             _robot = robot;
-
             // set position of rhex
             _robot->skeleton()->setPosition(0, 0);
 
@@ -151,6 +150,12 @@ namespace planar_dart
                 // update visualizations
                 boost::fusion::for_each(_visualizations, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
 
+#ifdef GRAPHIC
+                fixed_camera();
+                _osg_viewer.frame();
+                _osg_viewer.captureScreen("c.png");
+#endif
+
                 if (_break)
                 {
                     _euclidean_distance = -1;
@@ -158,11 +163,6 @@ namespace planar_dart
                     return;
                 }
 
-#ifdef GRAPHIC
-                fixed_camera();
-                _osg_viewer.frame();
-                _osg_viewer.captureScreen("c.png");
-#endif
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
             _final_pos = rob->gripper("final_pos")->getWorldPosition().head(2);
@@ -247,7 +247,7 @@ namespace planar_dart
         }
         Eigen::VectorXd final_position() const
         {
-            return _final_pos;// either empty or 2d, use for pairwisedist
+            return _final_pos; // either empty or 2d, use for pairwisedist
         }
         double euclidean_distance() const
         {
@@ -284,6 +284,11 @@ namespace planar_dart
         void stop_sim(bool disable = true)
         {
             _break = disable;
+        }
+
+        bool dead()
+        {
+            return _break;
         }
 
         planar_control_t &controller()
