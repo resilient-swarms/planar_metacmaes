@@ -28,7 +28,8 @@ def _build_individual_damagetest(bld):
 
 	cxxflags+=["-DINDIVIDUAL_DAMAGE"]
 	tag="test_individual"
-	cxxflags+=['-g']
+	if os.environ.get('BUILD_DEBUG',"True") == "True":
+		cxxflags+=['-g']
 	#meta
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
@@ -77,8 +78,8 @@ def _build_test(bld, take_compl=[]):
 	if os.environ.get('BUILD_GRAPHIC',"False") == "True":
 		cxxflags+=["-DGRAPHIC"]
 		libs += 'DART_GRAPHIC'
-
-	cxxflags+=['-g']
+	if os.environ.get('BUILD_DEBUG',"True") == "True":
+		cxxflags+=['-g']
 	#meta
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
@@ -108,7 +109,7 @@ def _build_test(bld, take_compl=[]):
 def _build_evolution(bld):
 	libs = 'PLANAR_DART DART EIGEN BOOST_DART BOOST TBB '
 	cxxflags = bld.get_env()['CXXFLAGS']
-	if os.environ.get('BUILD_DEBUG',"True") == "False":
+	if os.environ.get('BUILD_DEBUG',"True") == "True":
 		cxxflags+=['-g']
 	num_cores = os.environ.get('NUM_CORES',1)
 	if os.environ.get('BUILD_GRAPHICS',"False") == "True":

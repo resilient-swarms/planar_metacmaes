@@ -91,8 +91,10 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 
 BOOST_CLASS_EXPORT_IMPLEMENT(MutationAnnealing)
 BOOST_CLASS_EXPORT_IMPLEMENT(EpochAnnealing)
+BOOST_CLASS_EXPORT_IMPLEMENT(BothAnnealing)
 BOOST_CLASS_EXPORT_IMPLEMENT(MutationEndogenous)
 BOOST_CLASS_EXPORT_IMPLEMENT(EpochEndogenous)
+BOOST_CLASS_EXPORT_IMPLEMENT(BothEndogenous)
 BOOST_CLASS_EXPORT_IMPLEMENT(RL)
 BOOST_CLASS_EXPORT_IMPLEMENT(RLController)
 
