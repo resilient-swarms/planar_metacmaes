@@ -18,7 +18,33 @@ mkdir $RESULTS_DIR/${binary_type}_${control_type}
 outputdir="${RESULTS_DIR}/${binary_type}_${control_type}/exp${replicate_number}"
 mkdir ${outputdir}
 binary=${SFERES_DIR}/build/exp/planar_cmaes/planarCMAES_${binary_type}_binary
+currentdir=$PWD
+# get the last filename
+max="-1"
+get_last_filename()
+{
+# get the last filename
+shopt -s extglob
+cd ${outputdir}
+files=`ls -d !(*.*)` # gen_files don't have extension
+for gen_file in $files; do
+	number=${gen_file#"gen_"}
+	#echo $number
+	if (( $number > $max )); then
+    		max=$number
+	fi
 
+done
+}
 
-
-${binary} ${replicate_number} ${control_type} --d ${outputdir} >> ${outputdir}/log.txt
+get_last_filename
+echo "max generation found is $max"
+cd $currentdir
+echo "am now in $PWD"
+if (( $max > 0 )); then
+	echo "will resume at ${outputdir}/gen_$max"
+	${binary} ${replicate_number} ${control_type} --d ${outputdir} --resume ${outputdir}/gen_$max >> ${outputdir}/log.txt
+else
+	echo "will start new run"
+	${binary} ${replicate_number} ${control_type} --d ${outputdir} >> ${outputdir}/log.txt
+fi

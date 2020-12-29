@@ -6,17 +6,19 @@ From: planar_metacmaes.sif
  export BOTS_DIR=$HOME_CONTAINER/Resibots 
  export SFERES_DIR=$HOME_CONTAINER/sferes2
  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
- export NUM_CORES=40
+ export NUM_CORES=1
  echo "will use $NUM_CORES cores"
 
+cd $BOTS_DIR/include/meta-cmaes/
+git pull
 cd $HOME_CONTAINER/planar_metacmaes/planar_dart
 git pull
-cp -avr $HOME_CONTAINER/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
-cp -avr $HOME_CONTAINER/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
-cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_DIR}/share/armBody.skel
+cp -ar $HOME_CONTAINER/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
+cp -ar $HOME_CONTAINER/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
+cp -ar ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_DIR}/share/armBody.skel
 
 #build meta
-
+export BUILD_DEBUG=False
 export BUILD_TYPE=damage_meta
 ./waf distclean
 ./waf configure --prefix=$BOTS_DIR

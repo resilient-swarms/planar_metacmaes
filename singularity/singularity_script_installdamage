@@ -9,6 +9,8 @@ From: planar_metacmaes.sif
  export NUM_CORES=1
  echo "will use $NUM_CORES cores"
 
+cd $BOTS_DIR/include/meta-cmaes/
+git pull
 cd $HOME_CONTAINER/planar_metacmaes/planar_dart
 git pull
 cp -avr $HOME_CONTAINER/planar_metacmaes/meta-cmaes/ ${BOTS_DIR}/include
@@ -16,7 +18,7 @@ cp -avr $HOME_CONTAINER/planar_metacmaes/planar_cmaes/ ${SFERES_DIR}/exp
 cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_DIR}/share/armBody.skel
 
 #build meta, random, control, and cmaescheck
-
+export BUILD_DEBUG=False
 export BUILD_PHASE=INDIVIDUAL_DAMAGE
 ./waf distclean
 ./waf configure --prefix=$BOTS_DIR
