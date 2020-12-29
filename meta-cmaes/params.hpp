@@ -108,7 +108,7 @@ struct CMAESParams
     struct pop
     {
         SFERES_CONST unsigned nb_gen = 100001; // overestimate, will hit max_evals before that
-        SFERES_CONST int dump_period = 50;   // 
+        SFERES_CONST int dump_period = 100;   // 
         SFERES_CONST int size = 5;           // number of maps
         SFERES_CONST int initial_aleat = 1;
         SFERES_CONST unsigned max_evals = 100000000 ;//100M is equal to the bottomparams: 400*250000
