@@ -18,6 +18,7 @@ cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_D
 #build meta, random, control, and cmaescheck
 
 export BUILD_PHASE=TRAIN
+export BUILD_DEBUG=False
 ./waf distclean
 ./waf configure --prefix=$BOTS_DIR
 ./waf
