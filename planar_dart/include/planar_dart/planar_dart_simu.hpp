@@ -28,7 +28,6 @@
 
 #include <random>
 
-
 namespace planar_dart
 {
 
@@ -63,6 +62,8 @@ namespace planar_dart
     public:
         const int ISOMETRIC = 0, TOP = 1;
         const double MAXDIST = 0.5425;
+        const double delta = MAXDIST / 15.0;
+        std::vector<Eigen::Vector2d> bin_locations;
         using robot_t = std::shared_ptr<planar>;
         // defaults
         struct defaults
@@ -120,8 +121,65 @@ namespace planar_dart
             // full-screen
             // _osg_viewer.setUpViewOnSingleScreen();
 #endif
-        }
 
+#ifdef TEST
+            // set up bins from bin_locations.txt
+            std::cout << "Loading bin_locations.txt " << std::endl;
+            std::ifstream monFlux("bin_locations.txt");
+            if (monFlux)
+            {
+                std::string line;
+                while (std::getline(monFlux, line))
+                {
+                    std::istringstream iss(line);
+                    std::vector<double> numbers;
+                    double num;
+                    while (iss >> num)
+                    {
+                        numbers.push_back(num);
+                    }
+                    bin_locations.push_back(Eigen::Vector2d(numbers.data()));
+                }
+            }
+
+#endif
+        }
+        int find_bin() const
+        {
+            if (this->dead())
+            {
+                return -1;
+            }
+	    double mindist = INFINITY;
+	    int match = -1;
+            Eigen::Vector2d location = this->final_position();
+            // first transform numbers to be positive (simplifies binning)
+            //double x = location[0] + MAXDIST;
+            //double y = location[1] + MAXDIST;
+            //double x_bin = std::round(x / delta);
+            //double y_bin = std::round(y / delta);
+	    
+            std::cout << "location " << location.transpose() << std::endl; //" : (" << x_bin << "," << y_bin << ")" << std::endl;
+            for (int i = 0; i < bin_locations.size(); ++i)
+            {
+                // first transform numbers to be positive (simplifies binning)
+		Eigen::Vector2d bin = bin_locations[i];
+                //double xx = bin[0] + MAXDIST;
+                //double yy = bin[1] + MAXDIST;
+                //double xx_bin = std::round(xx / delta);
+                //double yy_bin = std::round(yy / delta);
+		double dist = (bin - location).norm();
+                if ( dist < mindist)
+                {
+		    mindist = dist;
+		    match = i;
+                    //return i;
+                }
+            }
+	    std::cout << "matching location " << bin_locations[match].transpose() << std::endl;
+    	    return match;
+            //return -1;
+        }
         ~planarDARTSimu() {}
 
         void run(double duration, bool continuous = false, bool chain = false)
@@ -129,7 +187,7 @@ namespace planar_dart
             run();
         }
 
-        void run(bool random_target = false)
+        void run()
         {
             _break = false;
             robot_t rob = this->robot();
@@ -167,19 +225,9 @@ namespace planar_dart
                 boost::fusion::for_each(_descriptors, Refresh<planarDARTSimu, planar>(*this, rob, init_trans));
             }
             _final_pos = rob->gripper("final_pos")->getWorldPosition().head(2);
-            if (random_target)
-            {
-                std::mt19937 _twister(rd());
+#ifdef TEST
 
-                std::uniform_real_distribution<> position_distribution(0, MAXDIST);
-                Eigen::Vector3d _bin(-position_distribution(_twister), MAXDIST - 2 * position_distribution(_twister), 0.0); // x in [-MAXDIST,0]; y in [-MAXDIST,MAXDIST]
-
-#ifdef GRAPHIC
-                std::cout << "choose random target " << _bin << std::endl;
 #endif
-                // // updates values of covered distance average body height and arrival angle
-                _euclidean_distance = (_final_pos - _bin).norm();
-            }
 
             std::vector<double> normalised_angles = _controller.parameters();
             double _mean_angles = 0.0;
@@ -254,7 +302,6 @@ namespace planar_dart
         {
             return _euclidean_distance;
         }
-
         double performance_val() const
         {
             return -_variance_angles; //lower variance is more efficient
@@ -287,12 +334,12 @@ namespace planar_dart
             _break = disable;
         }
 
-        bool dead()
+        bool dead() const
         {
             return _break;
         }
 
-        planar_control_t &controller()
+        planar_control_t &controller() 
         {
             return _controller;
         }
