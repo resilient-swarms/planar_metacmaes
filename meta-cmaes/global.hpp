@@ -110,7 +110,7 @@ namespace global
         }
         std::cout << std::endl;
 #ifdef TAKE_COMPLEMENT
-        damage_type = "stuck-0.75";
+        damage_type = "stuck0.25";
         ofs << "test:" << std::endl;
         for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
         {

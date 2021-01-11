@@ -33,22 +33,12 @@ int main(int argc, char **argv)
         assert(argc == CTRL_SIZE + 2);
     }
 
-    // using the same model as the hexapod and so the robot has a damages parameter but is set to 0
-    //std::vector<planar_dart::planarDamage> brk = std::vector<planar_dart::planarDamage>();
 
     srand(time(NULL)); //set seed
 
     // loads the robot with name planar tels it that it is not a URDF file and give it the blank damages
-    // possible models: raised.skel, skinny.skel, planar8.skel, raised_loosehind.skel
     auto global_robot = std::make_shared<planar_dart::planar>(argv[9], "planar", false); 
     
-    // sets the control vector up, some examples:
-    //tripod9
-    // ./waf && ./build/test 0 1 raised.skel 1 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0 0.5 0 0.5
-    // hill climb
-    // ./waf && ./build/test 1 1 raised.skel 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0 0 0.5 0.5 0.5
-    // stair climbing gait
-    // ./waf && ./build/test 2 1 raised.skel 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.33 0.66 0 0.33 0.66
     std::vector<double> ctrl = {atof(argv[1]), atof(argv[2]), atof(argv[3]), atof(argv[4]),
                                 atof(argv[5]), atof(argv[6]), atof(argv[7]), atof(argv[8])};
 
