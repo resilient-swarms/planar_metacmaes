@@ -94,7 +94,7 @@ namespace global
     std::vector<std::vector<planar_dart::planarDamage>> damage_sets;
     void init_damage(std::string seed, std::string robot_file)
     {
-        std::string damage_type = "stuck_at_45";
+        std::string damage_type = "stuck0.75";
         std::seed_seq seed2(seed.begin(), seed.end());
         std::mt19937 gen(seed2);
         std::cout << "damage sets :" << std::endl;
@@ -110,7 +110,7 @@ namespace global
         }
         std::cout << std::endl;
 #ifdef TAKE_COMPLEMENT
-        damage_type = "stuck_at_minus45";
+        damage_type = "stuck-0.75";
         ofs << "test:" << std::endl;
         for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
         {

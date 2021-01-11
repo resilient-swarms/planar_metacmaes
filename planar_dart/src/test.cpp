@@ -23,10 +23,10 @@ int main(int argc, char **argv)
 {
     // using the same model as the hexapod and so the robot has a damages parameter but is set to 0
     std::vector<planar_dart::planarDamage> damages(0);
-    if (argc == CTRL_SIZE + 3)
+    if (argc == CTRL_SIZE + 4)
     {
 
-        damages.push_back(planar_dart::planarDamage("stuck_at_minus45", argv[10]));
+        damages.push_back(planar_dart::planarDamage(argv[10],argv[11]));
     }
     else
     {

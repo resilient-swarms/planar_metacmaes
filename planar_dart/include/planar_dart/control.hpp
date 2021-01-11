@@ -7,33 +7,35 @@
 #define PI 3.14159265
 
 #define JOINT_COUNT 8      // no. outputs from the controller
-#define STUCK 0.7853981625     // 45Deg
+#define STUCK 0.7853981625 // 45Deg
 
-namespace planar_dart {
+namespace planar_dart
+{
 
-    class control {
+    class control
+    {
     public:
         using robot_t = std::shared_ptr<planar>;
 
         control() {}
 
-        control(const std::vector<double>& ctrl)
+        control(const std::vector<double> &ctrl)
         {
             set_parameters(ctrl);
-            
         }
 
-        control(const std::vector<double>& ctrl, robot_t robot, std::vector<planar_dart::planarDamage> damages = {})
+        control(const std::vector<double> &ctrl, robot_t robot, std::vector<planar_dart::planarDamage> damages = {})
             : _robot(robot), _damages(damages)
         {
             set_parameters(ctrl);
         }
 
-        void set_robot(robot_t r){
+        void set_robot(robot_t r)
+        {
             _robot = r;
         }
 
-        void set_parameters(const std::vector<double>& ctrl)
+        void set_parameters(const std::vector<double> &ctrl)
         {
             std::vector<double>::const_iterator first = ctrl.begin();
             std::vector<double>::const_iterator last = ctrl.begin() + ctrl.size();
@@ -42,24 +44,36 @@ namespace planar_dart {
             assert(f_ctrl.size() == JOINT_SIZE);
 
             _ctrl.resize(JOINT_SIZE, 0);
-            for(size_t i = 0; i < JOINT_SIZE; ++i)
+            for (size_t i = 0; i < JOINT_SIZE; ++i)
             {
                 _ctrl[i] = f_ctrl[i];
             }
             _leg_count = JOINT_COUNT;
 
             int leg = 0;
-            for (auto dmg : _damages) {
-                if (dmg.type == "stuck_at_45") {
+            for (auto dmg : _damages)
+            {
+                int pos = dmg.type.rfind("stuck");
+                if (pos != std::string::npos)
+                {
                     _leg_count -= 1;
-                    _removed_legs.push_back(stoi(dmg.data));
+                    int leg = stoi(dmg.data);
+                    double radians = stod(dmg.type.substr(pos + 5));
+                    _stuck_legs[leg] = radians;
                 }
-                else if (dmg.type == "stuck_at_minus45") {
-                    _leg_count -= 1;
-                    _removed_legs_test.push_back(stoi(dmg.data));
+                else
+                {
+                    pos = dmg.type.rfind("offset");
+                    if (pos != std::string::npos)
+                    {
+                        _leg_count -= 1;
+                        int leg = stoi(dmg.data);
+                        double radians = stod(dmg.type.substr(pos + 6));
+                        _offset_legs[leg] = radians;
+                    }
                 }
 
-                leg+=1;
+                leg += 1;
             }
         }
 
@@ -85,12 +99,10 @@ namespace planar_dart {
                 return;
 
             //_target_positions = _ctrll.pos(t);
-            
-            
 
             std::vector<double> values = parameters();
 
-            std::vector<double> tcommands(JOINT_COUNT,0);
+            std::vector<double> tcommands(JOINT_COUNT, 0);
 
             size_t dof = _robot->skeleton()->getNumDofs();
             Eigen::VectorXd commands = Eigen::VectorXd::Zero(dof);
@@ -98,38 +110,43 @@ namespace planar_dart {
             for (size_t i = 0; i < JOINT_COUNT; ++i)
             {
                 // for those legs not removed, add the command
-                if (std::binary_search(_removed_legs.begin(), _removed_legs.end(), i))
+                auto it = _stuck_legs.find(i);
+                if (it != _stuck_legs.end())
                 {
                     //tcommands[i] = values[i];
-                    commands[i] = STUCK;
+                    commands[i] = toRadians(_stuck_legs[i]);
                 }
-
-                // indicate removed legs with an stuck value 
-                else if(std::binary_search(_removed_legs_test.begin(), _removed_legs_test.end(), i))
+                // indicate removed legs with an stuck value
+                else
                 {
-                    //tcommands[i] = STUCK;
-                    commands[i] = -STUCK;
-                }
-                else 
-                {
-                    //tcommands[i] = values[i];
-                    commands[i] = toRadians(values[i]);
+                    it = _offset_legs.find(i);
+                    if (it != _offset_legs.end())
+                    {
+                        commands[i] = std::max(0.0,std::min(1.0,_offset_legs[i] + values[i]));
+                        commands[i] = toRadians(commands[i]);
+                    }
+                    else
+                    {
+                        //tcommands[i] = values[i];
+                        commands[i] = toRadians(values[i]);
+                    }
                 }
             }
             std::cout << "commands " << commands.transpose() << std::endl;
             _robot->skeleton()->setCommands(commands);
-
         }
-        double toNormalise(double angle){
-            double MAX = (PI/2.0);
-            double MIN = 0.0 - (PI/2.0);
+        double toNormalise(double angle)
+        {
+            double MAX = (PI / 2.0);
+            double MIN = 0.0 - (PI / 2.0);
 
-            return (angle - MIN)/(MAX - MIN);
+            return (angle - MIN) / (MAX - MIN);
         }
 
-        double toRadians(double val){
-            double MAX = (PI/2.0);
-            double MIN = 0.0 - (PI/2.0);
+        double toRadians(double val)
+        {
+            double MAX = (PI / 2.0);
+            double MIN = 0.0 - (PI / 2.0);
 
             return ((MAX - MIN) * val) + MIN;
         }
@@ -138,10 +155,10 @@ namespace planar_dart {
         std::vector<double> _ctrl;
         robot_t _robot;
         std::vector<planarDamage> _damages;
-        std::vector<int> _removed_legs;
-        std::vector<int> _removed_legs_test;
+        std::map<int, double> _stuck_legs;
+        std::map<int, double> _offset_legs;
         int _leg_count;
     };
-}
+} // namespace planar_dart
 
 #endif
