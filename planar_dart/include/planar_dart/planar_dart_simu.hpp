@@ -63,7 +63,6 @@ namespace planar_dart
         const int ISOMETRIC = 0, TOP = 1;
         const double MAXDIST = 0.5425;
         const double delta = MAXDIST / 15.0;
-        std::vector<Eigen::Vector2d> bin_locations;
         using robot_t = std::shared_ptr<planar>;
         // defaults
         struct defaults
@@ -122,62 +121,42 @@ namespace planar_dart
             // _osg_viewer.setUpViewOnSingleScreen();
 #endif
 
-#ifdef TEST
-            // set up bins from bin_locations.txt
-            std::cout << "Loading bin_locations.txt " << std::endl;
-            std::ifstream monFlux("bin_locations.txt");
-            if (monFlux)
-            {
-                std::string line;
-                while (std::getline(monFlux, line))
-                {
-                    std::istringstream iss(line);
-                    std::vector<double> numbers;
-                    double num;
-                    while (iss >> num)
-                    {
-                        numbers.push_back(num);
-                    }
-                    bin_locations.push_back(Eigen::Vector2d(numbers.data()));
-                }
-            }
 
-#endif
         }
-        int find_bin() const
+        int find_bin(const std::vector<Eigen::Vector2d> &bin_locations) const
         {
             if (this->dead())
             {
                 return -1;
             }
-	    double mindist = INFINITY;
-	    int match = -1;
+            double mindist = INFINITY;
+            int match = -1;
             Eigen::Vector2d location = this->final_position();
             // first transform numbers to be positive (simplifies binning)
             //double x = location[0] + MAXDIST;
             //double y = location[1] + MAXDIST;
             //double x_bin = std::round(x / delta);
             //double y_bin = std::round(y / delta);
-	    
-            std::cout << "location " << location.transpose() << std::endl; //" : (" << x_bin << "," << y_bin << ")" << std::endl;
+
+            //std::cout << "location " << location.transpose() << std::endl; //" : (" << x_bin << "," << y_bin << ")" << std::endl;
             for (int i = 0; i < bin_locations.size(); ++i)
             {
                 // first transform numbers to be positive (simplifies binning)
-		Eigen::Vector2d bin = bin_locations[i];
+                Eigen::Vector2d bin = bin_locations[i];
                 //double xx = bin[0] + MAXDIST;
                 //double yy = bin[1] + MAXDIST;
                 //double xx_bin = std::round(xx / delta);
                 //double yy_bin = std::round(yy / delta);
-		double dist = (bin - location).norm();
-                if ( dist < mindist)
+                double dist = (bin - location).norm();
+                if (dist < mindist)
                 {
-		    mindist = dist;
-		    match = i;
+                    mindist = dist;
+                    match = i;
                     //return i;
                 }
             }
-	    std::cout << "matching location " << bin_locations[match].transpose() << std::endl;
-    	    return match;
+            //std::cout << "matching location " << bin_locations[match].transpose() << std::endl;
+            return match;
             //return -1;
         }
         ~planarDARTSimu() {}
@@ -339,7 +318,7 @@ namespace planar_dart
             return _break;
         }
 
-        planar_control_t &controller() 
+        planar_control_t &controller()
         {
             return _controller;
         }
