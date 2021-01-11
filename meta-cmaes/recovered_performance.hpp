@@ -39,7 +39,7 @@ namespace sferes
                 auto robot = global::global_robot->clone();
                 simulator_t simu(_ctrl, robot);
 #else
-                auto robot = global::damaged_robots[damage_option]->clone();
+                auto robot = global::global_robot->clone();
                 // generate random target
 
                 simulator_t simu(_ctrl, robot, global::damage_sets[damage_option]);

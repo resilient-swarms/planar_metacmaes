@@ -22,14 +22,26 @@ struct Params
 int main(int argc, char **argv)
 {
     // using the same model as the hexapod and so the robot has a damages parameter but is set to 0
-    std::vector<planar_dart::planarDamage> brk = std::vector<planar_dart::planarDamage>();
-    assert(argc == CTRL_SIZE + 2);
-    srand(time(NULL));//set seed
+    std::vector<planar_dart::planarDamage> damages(0);
+    if (argc == CTRL_SIZE + 3)
+    {
+
+        damages.push_back(planar_dart::planarDamage("stuck_at_minus45", argv[10]));
+    }
+    else
+    {
+        assert(argc == CTRL_SIZE + 2);
+    }
+
+    // using the same model as the hexapod and so the robot has a damages parameter but is set to 0
+    //std::vector<planar_dart::planarDamage> brk = std::vector<planar_dart::planarDamage>();
+
+    srand(time(NULL)); //set seed
 
     // loads the robot with name planar tels it that it is not a URDF file and give it the blank damages
     // possible models: raised.skel, skinny.skel, planar8.skel, raised_loosehind.skel
-    auto global_robot = std::make_shared<planar_dart::planar>(argv[9], "planar", false, brk);
-
+    auto global_robot = std::make_shared<planar_dart::planar>(argv[9], "planar", false); 
+    
     // sets the control vector up, some examples:
     //tripod9
     // ./waf && ./build/test 0 1 raised.skel 1 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0 0.5 0 0.5
@@ -48,14 +60,13 @@ int main(int argc, char **argv)
                                          planar_dart::descriptors::AngleSum,
                                          planar_dart::descriptors::ConstantHigh,
                                          planar_dart::descriptors::ConstantLow,
-                                          planar_dart::descriptors::Genotype,
-                                           planar_dart::descriptors::NoisyGenotype,
-                                           planar_dart::descriptors::RandomVal>; 
-
+                                         planar_dart::descriptors::Genotype,
+                                         planar_dart::descriptors::NoisyGenotype,
+                                         planar_dart::descriptors::RandomVal>;
 
     using safe_t = boost::fusion::vector<planar_dart::safety_measures::LinkColliding>;
     using viz_t = boost::fusion::vector<planar_dart::visualizations::TargetArrow>;
-    planar_dart::planarDARTSimu<planar_dart::desc<desc_t>, planar_dart::viz<viz_t>> simu(ctrl, global_robot);
+    planar_dart::planarDARTSimu<planar_dart::desc<desc_t>, planar_dart::viz<viz_t>> simu(ctrl, global_robot->clone(), damages);
 
 #ifdef GRAPHIC
     simu.fixed_camera(simu.ISOMETRIC);

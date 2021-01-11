@@ -49,15 +49,11 @@ namespace sferes
 
                 for (size_t i = 0; i < 8; i++)
                     _ctrl.push_back(indiv.gen().data(i));
-
-#ifdef EVAL_ENVIR
                 // launching the simulation
                 auto robot = global::global_robot->clone();
-                simulator_t simu(_ctrl, robot);
-#else
-                auto robot = global::damaged_robots[damage_option]->clone();
+
                 simulator_t simu(_ctrl, robot, global::damage_sets[damage_option]);
-#endif
+
 
                 simu.run();
                 return std::tuple<Eigen::VectorXd, bool>{simu.final_position(), simu.euclidean_distance() == -1};

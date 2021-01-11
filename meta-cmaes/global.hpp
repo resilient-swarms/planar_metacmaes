@@ -90,7 +90,7 @@ namespace global
     std::shared_ptr<planar_dart::planar> global_robot;
 
 #if DAMAGE_TESTS() || ENVIR_TESTS()
-    std::vector<std::shared_ptr<planar_dart::planar>> damaged_robots;
+    //std::vector<std::shared_ptr<planar_dart::planar>> damaged_robots;
     std::vector<std::vector<planar_dart::planarDamage>> damage_sets;
     void init_damage(std::string seed, std::string robot_file)
     {
@@ -123,10 +123,10 @@ namespace global
         std::cout << "will do damage " << global::damage_index << ": " << damage_sets[global::damage_index][0].type << ", " << damage_sets[global::damage_index][0].data << std::endl;
 #endif
 #endif
-        for (size_t i = 0; i < global::damage_sets.size(); ++i)
-        {
-            global::damaged_robots.push_back(std::make_shared<planar_dart::planar>(robot_file, "planar", false, global::damage_sets[i])); // we repeat this creation process for damages
-        }
+        // for (size_t i = 0; i < global::damage_sets.size(); ++i)
+        // {
+        //     global::damaged_robots.push_back(std::make_shared<planar_dart::planar>(robot_file, "planar", false, global::damage_sets[i])); // we repeat this creation process for damages
+        // }
     }
 #endif
 #if GLOBAL_WEIGHT()
@@ -141,7 +141,7 @@ namespace global
 
     void init_simu(std::string seed, std::string robot_file)
     {
-        global::global_robot = std::make_shared<planar_dart::planar>(robot_file, "planar", false, std::vector<planar_dart::planarDamage>()); // we repeat this creation process for damages
+        global::global_robot = std::make_shared<planar_dart::planar>(robot_file, "planar", false); // we repeat this creation process for damages
 #if DAMAGE_TESTS() || ENVIR_TESTS()
         // damage tests (meta-learning with damages or test for damage recovery)
         init_damage(seed, robot_file);

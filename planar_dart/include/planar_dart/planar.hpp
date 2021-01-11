@@ -32,14 +32,13 @@ namespace planar_dart {
            
         }
 
-        planar(const std::string& model_file, const std::string& robot_name, const std::vector<std::pair<std::string, std::string>>& packages, bool is_urdf_string, std::vector<planarDamage> damages)
+        planar(const std::string& model_file, const std::string& robot_name, const std::vector<std::pair<std::string, std::string>>& packages, bool is_urdf_string)
         {
             //assert(_skeleton != nullptr);
             _robot_name = robot_name;
             _skeleton = _load_model(robot_name, model_file, packages, is_urdf_string);
 
             // lock_hip_joints();
-            _set_damages(damages);
             _set_gripper();
 
             // Set all coefficients to default values
@@ -47,16 +46,15 @@ namespace planar_dart {
             //set_restitution_coeff();
         }
 
-        planar(const std::string& model_file, const std::string& robot_name, bool is_urdf_string, std::vector<planarDamage> damages) : planar(model_file, robot_name, std::vector<std::pair<std::string, std::string>>(), is_urdf_string, damages) {
+        planar(const std::string& model_file, const std::string& robot_name, bool is_urdf_string) : planar(model_file, robot_name, std::vector<std::pair<std::string, std::string>>(), is_urdf_string) {
             _set_gripper();
         }
 
-        planar(dart::dynamics::SkeletonPtr skeleton, std::vector<planarDamage> damages)
+        planar(dart::dynamics::SkeletonPtr skeleton)
         {
             //assert(_skeleton != nullptr);
 
              _skeleton = skeleton;
-            _set_damages(damages);
             _set_gripper();
 
         }
@@ -73,8 +71,6 @@ namespace planar_dart {
             _skeleton->getMutex().unlock();
             auto _planar = std::make_shared<planar>();
             _planar->_skeleton = tmp_skel;
-            _planar->_damages = _damages;
-            _planar->_stuck_joints = _stuck_joints;
             _planar->_gripper_body = _gripper_body;
             _planar->_joint_1_marker = _joint_1_marker; 
             _planar->_joint_2_marker = _joint_2_marker; 
@@ -92,15 +88,7 @@ namespace planar_dart {
             return _skeleton;
         }
 
-        bool is_stuck(int joint) const
-        {
-            for (size_t j = 0; j < _stuck_joints.size(); j++) {
-                if (joint == _stuck_joints[j]) {
-                    return true;
-                }
-            }
-            return false;
-        }
+
         // note that default arguments are createMarker(
         // const std::string& name = "marker",
         // const Eigen::Vector3d& position = Eigen::Vector3d::Zero(),
@@ -112,16 +100,6 @@ namespace planar_dart {
         dart::dynamics::Marker* joint(int i,const std::string& tag){
         
             return _skeleton->getBodyNode("link_" + std::to_string(i+1))->createMarker(std::string("link_" + std::to_string(i+1)+"marker" + tag));
-        }
-
-        std::vector<int> stuck_joints() const
-        {
-            return _stuck_joints;
-        }
-
-        std::vector<planarDamage> damages() const
-        {
-            return _damages;
         }
 
         Eigen::Vector3d pos()
@@ -147,18 +125,6 @@ namespace planar_dart {
             return tmp;
         }
 
-        void lock_joints() {
-            for(size_t i = 0; i < JOINT_SIZE; i++){
-                auto jnt = _skeleton->getJoint("joint_" + std::string(1, i +'0'));
-                jnt->setActuatorType(dart::dynamics::Joint::LOCKED);
-            }
-        }
-
-				//make it stuck at 45
-		void lock_single_joint(size_t index) {
-                auto jnt = _skeleton->getJoint("joint_" + std::string(1, index +'0'));
-                jnt->setActuatorType(dart::dynamics::Joint::LOCKED);
-        }
 
     protected:
         dart::dynamics::SkeletonPtr _load_model(const std::string& robot_name, const std::string& filename, const std::vector<std::pair<std::string, std::string>>& packages, bool is_urdf_string)
@@ -246,31 +212,6 @@ namespace planar_dart {
             return tmp_skel;
         }
 
-        void _set_damages(const std::vector<planarDamage>& damages)
-        {
-            _stuck_joints.clear();
-            _damages = damages;
-            /*for (auto dmg : _damages) {
-                if (dmg.type == "stuck_at_45") {
-                    for (size_t i = 0; i < dmg.data.size(); i++) {
-                        int l = dmg.data[i] - '0';
-                        _stuck_joints.push_back(l);
-
-                        lock_single_joint(l);
-                    }
-                }
-                if (dmg.type == "stuck_at_minus45") {
-                    for (size_t i = 0; i < dmg.data.size(); i++) {
-                        int l = dmg.data[i] - '0';
-                        _stuck_joints.push_back(l);
-
-                        lock_single_joint(l);
-                    }
-                }
-            }*/
-
-            std::sort(_stuck_joints.begin(), _stuck_joints.end());
-        }
 
         void _set_gripper() {
             std::string gripper_index = "link_8";
@@ -287,8 +228,6 @@ namespace planar_dart {
         }
 
         dart::dynamics::SkeletonPtr _skeleton;
-        std::vector<planarDamage> _damages;
-        std::vector<int> _stuck_joints;
         std::string _robot_name;
         dart::dynamics::Marker* _gripper_body;
         dart::dynamics::Marker* _joint_1_marker; 

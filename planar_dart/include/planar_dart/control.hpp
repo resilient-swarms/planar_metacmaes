@@ -108,7 +108,7 @@ namespace planar_dart {
                 else if(std::binary_search(_removed_legs_test.begin(), _removed_legs_test.end(), i))
                 {
                     //tcommands[i] = STUCK;
-                    commands[i] = -1.0*STUCK;
+                    commands[i] = -STUCK;
                 }
                 else 
                 {
@@ -116,7 +116,7 @@ namespace planar_dart {
                     commands[i] = toRadians(values[i]);
                 }
             }
-
+            std::cout << "commands " << commands.transpose() << std::endl;
             _robot->skeleton()->setCommands(commands);
 
         }
