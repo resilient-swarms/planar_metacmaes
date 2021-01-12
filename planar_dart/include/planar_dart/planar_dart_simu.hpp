@@ -88,12 +88,13 @@ namespace planar_dart
         using viz_t = typename boost::mpl::if_<boost::fusion::traits::is_sequence<Visualizations>, Visualizations, boost::fusion::vector<Visualizations>>::type;
 
         planarDARTSimu(const std::vector<double> &ctrl, robot_t robot, std::vector<planar_dart::planarDamage> damages = {}) : _euclidean_distance(10000),
+															      _variance_angles(0.0),
                                                                                                                               _world(std::make_shared<dart::simulation::World>()),
                                                                                                                               _controller(ctrl, robot, damages),
                                                                                                                               _old_index(0),
                                                                                                                               _desc_period(2),
-                                                                                                                              _break(false),
-                                                                                                                              _variance_angles(0.0)
+                                                                                                                              _break(false)
+                                                                                                                              
         {
             _world->getConstraintSolver()->setCollisionDetector(dart::collision::DARTCollisionDetector::create());
             _robot = robot;
@@ -171,7 +172,7 @@ namespace planar_dart
             _break = false;
             robot_t rob = this->robot();
             static Eigen::Vector6d init_trans = rob->pose();
-            double old_t = _world->getTime();
+            //double old_t = _world->getTime();
 #ifdef GRAPHIC
             if (!_osg_viewer.done())
             //while ((_world->getTime() - old_t) < 5.0 && !_osg_viewer.done())

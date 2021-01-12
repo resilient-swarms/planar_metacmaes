@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
     using safe_t = boost::fusion::vector<planar_dart::safety_measures::LinkColliding>;
     using viz_t = boost::fusion::vector<planar_dart::visualizations::TargetArrow>;
-    planar_dart::planarDARTSimu<planar_dart::desc<desc_t>, planar_dart::viz<viz_t>> simu(ctrl, global_robot->clone(), damages);
+    planar_dart::planarDARTSimu<planar_dart::desc<desc_t>, planar_dart::safety<safe_t>, planar_dart::viz<viz_t>> simu(ctrl, global_robot->clone(), damages);
 
 #ifdef GRAPHIC
     simu.fixed_camera(simu.ISOMETRIC);
