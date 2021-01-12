@@ -33,7 +33,11 @@ namespace sferes
                     {
                         // evaluate the individual
                         std::tuple<Eigen::VectorXd, bool> tup = sferes::fit::PairwiseDist<base_phen_t>::_eval_single_envir(*pop[i], j);
-                        positions.push_back(std::get<0>(tup));
+                        bool dead = std::get<1>(tup);
+                        if (!dead)
+                        {
+                            positions.push_back(std::get<0>(tup));
+                        }
                         // use dead information for database?
                     }
                     fit += sferes::fit::PairwiseDist<base_phen_t>::compute(positions);
@@ -87,26 +91,17 @@ namespace sferes
                 {
 
                     bool dead = shared_memory[i]->getDeath();
-                    if (dead)
+                    Eigen::VectorXd pos = dynamic_cast<CSharedMemPosition *>(shared_memory[i])->getPosition();
+                    if (!dead)
                     {
-                        positions.push_back(Eigen::VectorXd()); //empty vec
-                    }
-                    else
-                    {
-                        positions.push_back(dynamic_cast<CSharedMemPosition *>(shared_memory[i])->getPosition());
+                        positions.push_back(pos);
                     }
 
                     //Fit::add_metaeval_to_database(*this->_pop[i]);
 
 #ifdef CHECK_PARALLEL
-                    if (dead)
-                    {
-                        std::cout << "parent position " << i << " " << positions.back() << std::endl;
-                    }
-                    else
-                    {
-                        std::cout << "parent position " << i << " " << positions.back().transpose() << std::endl;
-                    }
+
+                    std::cout << "parent position " << i << " " << pos << std::endl;
                     std::cout << "parent death " << i << " " << dead << std::endl;
 #endif
                 }

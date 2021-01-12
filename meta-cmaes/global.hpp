@@ -20,7 +20,6 @@
 namespace global
 {
     // set the right condition
-
     enum ConditionType
     {
         meta = 0,

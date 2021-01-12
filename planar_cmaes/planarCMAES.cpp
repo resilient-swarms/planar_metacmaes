@@ -36,7 +36,6 @@
 #endif
 #endif
 
-
 #include <boost/random.hpp>
 #include <iostream>
 #include <mutex>
@@ -88,7 +87,6 @@ typedef sferes::ea::MapElites<phen_t, eval_t, stat_t, modifier_t, BottomParams> 
 #if META()
 #include <meta-cmaes/top_typedefs.hpp>
 
-
 BOOST_CLASS_EXPORT_IMPLEMENT(MutationAnnealing)
 BOOST_CLASS_EXPORT_IMPLEMENT(EpochAnnealing)
 BOOST_CLASS_EXPORT_IMPLEMENT(BothAnnealing)
@@ -101,51 +99,46 @@ BOOST_CLASS_EXPORT_IMPLEMENT(RLController)
 #endif
 namespace sferes
 {
-namespace gen
-{
-template <>
-void bottom_gen_t::mutate()
-{
-    if (BottomParams::sampled::ordered)
+    namespace gen
     {
-        for (size_t i = 0; i < _data.size(); ++i)
-	{
-#if META()
-	    float mutation_rate = sferes::eval::param_ctrl->get_mutation_rate();
-#else
-	    float mutation_rate = BottomParams::sampled::mutation_rate;
-#endif
-            if (misc::rand<float>() < mutation_rate)
+        template <>
+        void bottom_gen_t::mutate()
+        {
+            if (BottomParams::sampled::ordered)
             {
-                if (misc::flip_coin())
-                    _data[i] = std::max(0, (int)_data[i] - 1);
-                else
-                    _data[i] = std::min((int)BottomParams::sampled::values_size() - 1,
-                                        (int)_data[i] + 1);
-            }
-       }
-    }
-    else
-    {
+                for (size_t i = 0; i < _data.size(); ++i)
+                {
 #if META()
-	float mutation_rate = sferes::eval::param_ctrl->get_mutation_rate();
+                    float mutation_rate = sferes::eval::param_ctrl->get_mutation_rate();
 #else
-	float mutation_rate = BottomParams::sampled::mutation_rate;
+                    float mutation_rate = BottomParams::sampled::mutation_rate;
 #endif
-        BOOST_FOREACH (size_t &v, _data)
-            if (misc::rand<float>() < mutation_rate)
-                v = misc::rand<size_t>(0, BottomParams::sampled::values_size());
-        _check_invariant();
-    }
-    _check_invariant();
-}
-}
-}
-
-
-
-
-
+                    if (misc::rand<float>() < mutation_rate)
+                    {
+                        if (misc::flip_coin())
+                            _data[i] = std::max(0, (int)_data[i] - 1);
+                        else
+                            _data[i] = std::min((int)BottomParams::sampled::values_size() - 1,
+                                                (int)_data[i] + 1);
+                    }
+                }
+            }
+            else
+            {
+#if META()
+                float mutation_rate = sferes::eval::param_ctrl->get_mutation_rate();
+#else
+                float mutation_rate = BottomParams::sampled::mutation_rate;
+#endif
+                BOOST_FOREACH (size_t &v, _data)
+                    if (misc::rand<float>() < mutation_rate)
+                        v = misc::rand<size_t>(0, BottomParams::sampled::values_size());
+                _check_invariant();
+            }
+            _check_invariant();
+        }
+    } // namespace gen
+} // namespace sferes
 
 using namespace sferes;
 
@@ -158,8 +151,6 @@ int main(int argc, char **argv)
     sferes::eval::init_shared_mem<shared_memory_t>();
 #endif
 
-
-
 #ifdef TEST
 #if CMAES_CHECK()
     global::damage_index = atoi(argv[2]);
@@ -169,7 +160,7 @@ int main(int argc, char **argv)
 #if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
-    sferes::eval::param_ctrl = init_parameter_control(seed,std::string(argv[2]));
+    sferes::eval::param_ctrl = init_parameter_control(seed, std::string(argv[2]));
 #endif
 #endif
 

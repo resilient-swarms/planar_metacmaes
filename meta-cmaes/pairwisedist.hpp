@@ -28,13 +28,9 @@ namespace sferes
                 for (size_t i = 0; i < positions.size() - 1; ++i)
                 {
                     Eigen::VectorXd pos = positions[i];
-                    if (pos.size() == 0)
-                        continue; //counts as 0
                     for (size_t j = i + 1; j < positions.size(); ++j)
                     {
                         Eigen::VectorXd pos2 = positions[j];
-                        if (pos2.size() == 0)
-                            continue; //counts as 0
                         dist += (pos - pos2).norm();
                     }
                 }
@@ -56,7 +52,7 @@ namespace sferes
 
 
                 simu.run();
-                return std::tuple<Eigen::VectorXd, bool>{simu.final_position(), simu.euclidean_distance() == -1};
+                return std::tuple<Eigen::VectorXd, bool>{simu.final_position(), simu.dead()};
             }
         };
 
