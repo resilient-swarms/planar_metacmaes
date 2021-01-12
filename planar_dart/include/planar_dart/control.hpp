@@ -53,7 +53,7 @@ namespace planar_dart
             int leg = 0;
             for (auto dmg : _damages)
             {
-                int pos = dmg.type.rfind("stuck");
+                size_t pos = dmg.type.rfind("stuck");
                 if (pos != std::string::npos)
                 {
                     _leg_count -= 1;
@@ -63,7 +63,7 @@ namespace planar_dart
                 }
                 else
                 {
-                    pos = dmg.type.rfind("offset");
+                    size_t pos = dmg.type.rfind("offset");
                     if (pos != std::string::npos)
                     {
                         _leg_count -= 1;
