@@ -65,8 +65,13 @@ def build(bld):
                       target = 'test')
    
 
-
-
+    bld.program(features = 'cxx',
+                      install_path = None,
+                      source = 'src/rl_test.cpp',
+                      includes = ['./include',"${PREFIX}/include"],
+                      uselib = 'BOOST BOOST_DART BOOST_SYSTEM BOOST_REGEX EIGEN DART_GRAPHIC',
+                      defines = [],
+                      target = 'rl_test')
     bld.install_files('${PREFIX}/include/planar_dart', 'include/planar_dart/planar_dart_simu.hpp')
     bld.install_files('${PREFIX}/include/planar_dart', 'include/planar_dart/planar.hpp')
     bld.install_files('${PREFIX}/include/planar_dart', 'include/planar_dart/control.hpp')
