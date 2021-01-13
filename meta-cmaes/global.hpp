@@ -19,6 +19,33 @@
 
 namespace global
 {
+    class RNG
+    {
+        std::random_device rd;
+        std::mt19937 gen;
+        long seed;
+
+    public:
+        RNG() {}
+        RNG(long s)
+        {
+            gen = std::mt19937(s);
+            seed = s;
+        }
+        /* int in [0,num-1] */
+        int nextInt(size_t num)
+        {
+            std::uniform_int_distribution<unsigned> distrib(0, num - 1);
+            return distrib(gen);
+        }
+        /* float in [0,1] */
+        float nextFloat()
+        {
+            std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
+            return distrib(gen);
+        }
+    };
+    RNG *rng;
     // set the right condition
     enum ConditionType
     {
@@ -93,7 +120,8 @@ namespace global
     std::vector<std::vector<planar_dart::planarDamage>> damage_sets;
     void init_damage(std::string seed, std::string robot_file)
     {
-        std::string damage_type = "stuck0.75";
+        rng = new RNG((long) stoi(seed));
+        std::string damage_type = "stuck";
         std::seed_seq seed2(seed.begin(), seed.end());
         std::mt19937 gen(seed2);
         std::cout << "damage sets :" << std::endl;
@@ -101,21 +129,35 @@ namespace global
 
         for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
         {
-            std::cout << damage_type << "," << leg << "\n";
-            ofs << damage_type << "," << leg << "\n";
+            std::cout << damage_type << "+ ," << leg << "\n";
+            std::cout << damage_type << "- ," << leg << "\n";
+            ofs << damage_type << "+ ," << leg << "\n";
+            ofs << damage_type << "- ," << leg << "\n";
 #ifndef TAKE_COMPLEMENT
-            damage_sets.push_back({planar_dart::planarDamage(damage_type.c_str(), std::to_string(leg).c_str())});
+            // push back twice to later add both pos and negative angle
+            std::string data = std::to_string(leg);
+            damage_sets.push_back({planar_dart::planarDamage(damage_type, data)});
+            damage_sets.push_back({planar_dart::planarDamage(damage_type, data)});
 #endif
         }
         std::cout << std::endl;
 #ifdef TAKE_COMPLEMENT
-        damage_type = "stuck0.25";
+        damage_type = "offset";
         ofs << "test:" << std::endl;
         for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
         {
-            std::cout << damage_type << "," << leg << "\n";
-            ofs << damage_type << "," << leg << "\n";
-            damage_sets.push_back({planar_dart::planarDamage(damage_type.c_str(), std::to_string(leg).c_str())});
+            for(float off = -1.0f; off <= 1.0f; off+=0.05)
+            {
+                if (off == 0)
+                {
+                    continue;
+                }
+                std::string dt = damage_type + std::to_string(off);
+                std::cout << dt << "," << leg << "\n";
+                ofs << dt << "," << leg << "\n";
+                std::string data = std::to_string(leg);
+                damage_sets.push_back({planar_dart::planarDamage(dt, data)});
+            }
         }
         std::cout << std::endl;
 #if CMAES_CHECK()

@@ -34,9 +34,9 @@ namespace sferes
                         dist += (pos - pos2).norm();
                     }
                 }
-                return dist;// no averaging over comparisons so that maps with high coverage and high pairwise distance are best
+                return dist; // no averaging over comparisons so that maps with high coverage and high pairwise distance are best
             }
-            static std::tuple<Eigen::VectorXd, bool> _eval_single_envir(const Phen &indiv, size_t damage_option)
+            static std::tuple<Eigen::VectorXd, bool> _eval_single_envir(const Phen &indiv, const std::vector<planar_dart::planarDamage> &damages)
             {
 
                 // copy of controller's parameters
@@ -48,8 +48,7 @@ namespace sferes
                 // launching the simulation
                 auto robot = global::global_robot->clone();
 
-                simulator_t simu(_ctrl, robot, global::damage_sets[damage_option]);
-
+                simulator_t simu(_ctrl, robot, damages);
 
                 simu.run();
                 return std::tuple<Eigen::VectorXd, bool>{simu.final_position(), simu.dead()};

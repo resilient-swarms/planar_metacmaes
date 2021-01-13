@@ -17,6 +17,25 @@ namespace sferes
 {
     namespace eval
     {
+        std::vector<planar_dart::planarDamage> get_damageset(size_t j)
+        {
+            std::string damage_type = global::damage_sets[j][0].type;
+            float angle;
+            if (j % 2 == 0)
+            {
+
+                angle = 0.50f + 0.50f * global::rng->nextFloat(); // generate positive angle ( in [0.50,1] before conversion)
+            }
+            else
+            {
+                angle = 0.50f * global::rng->nextFloat(); // generate negative angle ( in [0,0.50] before conversion)
+            }
+            damage_type += std::to_string(angle);
+            std::string leg = global::damage_sets[j][0].data;
+            std::cout << "damage " << damage_type << " to leg " << leg << std::endl;
+            planar_dart::planarDamage damage(damage_type, leg);
+            return {damage};
+        }
         template <typename Phen>
         struct _eval_serial_meta
         {
@@ -28,11 +47,12 @@ namespace sferes
                 float fit = 0.0f;
                 for (size_t j = 0; j < global::damage_sets.size(); ++j)
                 {
+                    std::vector<planar_dart::planarDamage> damages = get_damageset(j);
                     std::vector<Eigen::VectorXd> positions;
                     for (size_t i = 0; i < pop.size(); ++i)
                     {
                         // evaluate the individual
-                        std::tuple<Eigen::VectorXd, bool> tup = sferes::fit::PairwiseDist<base_phen_t>::_eval_single_envir(*pop[i], j);
+                        std::tuple<Eigen::VectorXd, bool> tup = sferes::fit::PairwiseDist<base_phen_t>::_eval_single_envir(*pop[i],damages);
                         bool dead = std::get<1>(tup);
                         if (!dead)
                         {
@@ -54,14 +74,14 @@ namespace sferes
             float value;
             size_t nb_evals;
             Phen meta_indiv;
-            size_t damage_index;
+            std::vector<planar_dart::planarDamage> damages;
             _eval_parallel_meta(Phen &meta_i, float percent)
             { //now join the bottom-level fitnesses
                 this->_pop = meta_i.sample_individuals();
                 value = 0.0f;
-                for (size_t j = 0; j < global::damage_sets.size(); ++j)
+                for (size_t j = 0; j < global::damage_sets.size(); j += 2)
                 {
-                    damage_index = j;
+                    damages = get_damageset(j);
                     this->run();
                 }
                 /* result */
@@ -71,7 +91,7 @@ namespace sferes
             virtual void LaunchSlave(size_t slave_id)
             {
                 // we sample directly from map of developed individuals, so the individuals do not need to be developed, nor does their fitness prototype be set
-                std::tuple<Eigen::VectorXd, bool> tup = sferes::fit::PairwiseDist<base_phen_t>::_eval_single_envir(*this->_pop[slave_id], damage_index);
+                std::tuple<Eigen::VectorXd, bool> tup = sferes::fit::PairwiseDist<base_phen_t>::_eval_single_envir(*this->_pop[slave_id], damages);
                 // write fitness and death value (no descriptors) to shared memory
                 dynamic_cast<CSharedMemPosition *>(shared_memory[slave_id])->setPosition(std::get<0>(tup)); // ASSUME SINGLE OBJECTIVE
                 dynamic_cast<CSharedMemPosition *>(shared_memory[slave_id])->setDeath(std::get<1>(tup));    // no need
