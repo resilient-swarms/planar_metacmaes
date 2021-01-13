@@ -160,7 +160,16 @@ int main(int argc, char **argv)
 #if CONTROL()
     global::set_condition(argv[2]);
 #elif META()
-    sferes::eval::param_ctrl = init_parameter_control(seed, std::string(argv[2]));
+    size_t index = 0;
+    for (size_t i = 0; i < argc; ++i)
+    {
+        if (std::string(argv[i]) == "--d")
+        {
+            index = i + 1;
+	    break;
+        }
+    }
+    sferes::eval::param_ctrl = init_parameter_control(seed, std::string(argv[2]), argv[index]);
 #endif
 #endif
 
