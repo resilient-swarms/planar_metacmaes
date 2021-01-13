@@ -132,7 +132,7 @@ namespace planar_dart
                     }
                 }
             }
-            std::cout << "commands " << commands.transpose() << std::endl;
+            //std::cout << "commands " << commands.transpose() << std::endl;
             _robot->skeleton()->setCommands(commands);
         }
         double toNormalise(double angle)

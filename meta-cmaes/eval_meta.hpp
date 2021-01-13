@@ -32,7 +32,7 @@ namespace sferes
             }
             damage_type += std::to_string(angle);
             std::string leg = global::damage_sets[j][0].data;
-            std::cout << "damage " << damage_type << " to leg " << leg << std::endl;
+            //std::cout << "damage " << damage_type << " to leg " << leg << std::endl;
             planar_dart::planarDamage damage(damage_type, leg);
             return {damage};
         }
