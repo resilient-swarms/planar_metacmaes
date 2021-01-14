@@ -36,7 +36,9 @@ def _build_individual_damagetest(bld):
 								use = 'sferes2',
 								uselib = libs,
 								target = tag+'_damage_meta',
-								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1"],   # damage
+								cxxflags = take_compl +  cxxflags + ['-DTEST',
+								'-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1",
+								"-DBEHAV_DIM=4"],   # damage
 								variants = ['BINARY'])
     #random
 	sferes.create_variants(bld,
@@ -44,7 +46,9 @@ def _build_individual_damagetest(bld):
 								use = 'sferes2',
 								uselib = libs,
 								target = tag+'_damage_random',
-								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=1","-DNUM_CORES=1"],   # damage
+								cxxflags = take_compl +  cxxflags + ['-DTEST',
+								'-march=native',"-DEXPERIMENT_TYPE=1",
+								"-DNUM_CORES=1","-DBEHAV_DIM=4"],   # damage
 								variants = ['BINARY'])
 
 	#control
@@ -53,7 +57,9 @@ def _build_individual_damagetest(bld):
 							use = 'sferes2',
 							uselib = libs,
 							target = tag+'_damage_control',
-							cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=2","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
+							cxxflags = take_compl +  cxxflags + ['-DTEST',
+							'-march=native',"-DEXPERIMENT_TYPE=2",
+							"-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1")),"-DBEHAV_DIM=6"],   # damage
 							variants = ['BINARY'])
 
 	#cmaes_check
@@ -62,7 +68,8 @@ def _build_individual_damagetest(bld):
 							use = 'sferes2',
 							uselib = libs,
 							target = tag+'_damage_cmaescheck',
-							cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=3","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
+							cxxflags = take_compl +  cxxflags + ['-DTEST',
+							'-march=native',"-DEXPERIMENT_TYPE=3","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
 							variants = ['BINARY'])
 
 
@@ -86,7 +93,9 @@ def _build_test(bld, take_compl=[]):
 								use = 'sferes2',
 								uselib = libs,
 								target = tag+'_damage_meta',
-								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1"],   # damage
+								cxxflags = take_compl +  cxxflags + ['-DTEST',
+								'-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1",
+								"-DBEHAV_DIM=4"],   # damage
 								variants = ['BINARY'])
     #random
 	sferes.create_variants(bld,
@@ -94,7 +103,9 @@ def _build_test(bld, take_compl=[]):
 								use = 'sferes2',
 								uselib = libs,
 								target = tag+'_damage_random',
-								cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=1","-DNUM_CORES=1"],   # damage
+								cxxflags = take_compl +  cxxflags + ['-DTEST',
+								'-march=native',"-DEXPERIMENT_TYPE=1","-DNUM_CORES=1",
+								"-DBEHAV_DIM=4"],   # damage
 								variants = ['BINARY'])
 	#control
 	sferes.create_variants(bld,
@@ -102,7 +113,9 @@ def _build_test(bld, take_compl=[]):
 							use = 'sferes2',
 							uselib = libs,
 							target = tag+'_damage_control',
-							cxxflags = take_compl +  cxxflags + ['-DTEST','-march=native',"-DEXPERIMENT_TYPE=2","-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1"))],   # damage
+							cxxflags = take_compl +  cxxflags + ['-DTEST',
+							'-march=native',"-DEXPERIMENT_TYPE=2",
+							"-DNUM_CORES="+str(os.environ.get('NUM_CORES',"1")),"-DBEHAV_DIM=6"],   # damage
 							variants = ['BINARY'])
 
 

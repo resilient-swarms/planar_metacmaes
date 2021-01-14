@@ -26,9 +26,7 @@
 
 //#define PRINTING
 //#define CHECK_PARALLEL
-#ifdef TEST
-#define BEHAV_DIM 2 //
-#else
+#ifndef TEST
 #if NUM_CORES > 1
 #define PARALLEL_RUN
 #else
