@@ -52,12 +52,12 @@ From: ubuntu:16.04
  cmake -DDART_ENABLE_SIMD=ON -DCMAKE_INSTALL_PREFIX=$BOTS_DIR .. 
  make -j8 && make install
 
- cd ${HOME_CONTAINER}/planar_metacmaes/planar_dart/
- ./waf configure --prefix=$BOTS_DIR
- ./waf 
- ./waf install
-
- cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_DIR}/share/armBody.skel
+ # do installations in update-script
+ #cd ${HOME_CONTAINER}/planar_metacmaes/planar_dart/
+ #./waf configure --prefix=$BOTS_DIR
+ #./waf 
+ #./waf install
+ #cp -avr ${HOME_CONTAINER}/planar_metacmaes/planar_dart/src/armBody.skel ${BOTS_DIR}/share/armBody.skel
  cd ${HOME_CONTAINER}
  git clone https://github.com/sferes2/sferes2.git
 
