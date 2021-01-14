@@ -8,35 +8,48 @@
  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/lib:/usr/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:$BOTS_DIR/lib
 
 
-test_type=$1       # test_individual, test, or train
-condition_type=$2  #damage_meta, a control condition, or random
-control_type=$3   # need to supply argument with the method
-replicate_number=$4
-RESULTS_DIR=$5 # destination folder
+ test_type=$1       #  test or train (train not implemented (yet))
+condition_type=$2  # meta, control, or random
+fm=$3              # 2D,4D, or 6D for control; otherwise linfm, nonlinfm or selectionfm; for meta conditions added genes as well, e.g. linfm_added0genes
+control_type=$4   # need to supply argument with the method, e.g. b1p1 for meta, "" for random, and "pol" for control
+replicate_number=$5
+RESULTS_DIR=$6 # destination folder
 
 mkdir $RESULTS_DIR
-mkdir $RESULTS_DIR/${condition_type}_${control_type}
-outputdir="${RESULTS_DIR}/${condition_type}_${control_type}/exp${replicate_number}"
+if [[ $condition_type == meta* ]]; then
+	condition_prefix="damage_meta_"
+else
+	condition_prefix=$condition_type
+fi
+mkdir $RESULTS_DIR/${condition_prefix}${fm}_${control_type}
+outputdir="${RESULTS_DIR}/${condition_prefix}${fm}_${control_type}/exp${replicate_number}"
 
 mkdir ${outputdir}
 
-if [[ "$condition_type" == "damage_meta" ]]; then
-	condition_type="meta"  # remove the damage prefix
-	gen=500
-else
-	gen=50000
-fi
+currentdir=$PWD
+# get the last filename
+max="-1"
+get_last_filename()
+{
+# get the last filename
+shopt -s extglob
+cd ${outputdir}
+files=`ls -d !(*.*)` # gen_files don't have extension
+for gen_file in $files; do
+	number=${gen_file#"gen_"}
+	#echo $number
+	if (( $number > $max )); then
+    		max=$number
+	fi
 
+done
+}
+
+get_last_filename
+echo "max generation found is $max"
+outputdir=$currentdir/$outputdir
+cd /singularity_home/planar_metacmaes/ 
+echo "am now in $PWD"
 binary=${SFERES_DIR}/build/exp/planar_cmaes/${test_type}_damage_${condition_type}_binary
-
-if [[ "$test_type" == "individual" ]]; then
-	# loop over all damage indices
-	for i in 0 1 2 3 4 5 6 7; do
-		echo "damage $i"
-		${binary} ${replicate_number} ${i} --d ${outputdir} >> ${outputdir}/log_${test_type}${i}.txt
-	done
-else
-	${binary} ${replicate_number} --load ${outputdir}/gen_${gen} --d ${outputdir} -o ${outputdir}/${test_type}_damage_performance >> ${outputdir}/log_${test_type}.txt
-
-fi	
+${binary} ${replicate_number} --load ${outputdir}/gen_${max} --d ${outputdir} -o ${outputdir}/${test_type}_damage_performance >> ${outputdir}/log_${test_type}.txt	
 
