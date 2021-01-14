@@ -146,9 +146,9 @@ namespace global
         ofs << "test:" << std::endl;
         for (size_t leg = 0; leg < JOINT_SIZE; ++leg)
         {
-            for(float off = -1.0f; off < 1.05f; off+=0.05)
+            for(float off = -0.5f; off < 0.55f; off+=0.05)
             {
-                if (off == 0)
+                if (std::abs(off) < 0.01f)
                 {
                     continue;
                 }
