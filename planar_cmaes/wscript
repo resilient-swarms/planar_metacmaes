@@ -97,6 +97,17 @@ def _build_test(bld, take_compl=[]):
 								'-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1",
 								"-DBEHAV_DIM=4"],   # damage
 								variants = ['BINARY'])
+	# meta for nonlinear featuremaps (avoid error from dimension mismatch in resume)
+	sferes.create_variants(bld,
+								source = 'planarCMAES.cpp',
+								use = 'sferes2',
+								uselib = libs,
+								target = tag+'_damage_meta_nonlinfm',
+								cxxflags = take_compl +  cxxflags + ['-DTEST',
+								'-march=native',"-DEXPERIMENT_TYPE=0","-DNUM_CORES=1",
+								"-DBEHAV_DIM=4","-DFEATUREMAP=2"
+								],   # damage
+								variants = ['BINARY'])
     #random
 	sferes.create_variants(bld,
 								source = 'planarCMAES.cpp',
