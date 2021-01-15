@@ -12,3 +12,5 @@ cd $SFERES_DIR
 ./waf distclean
 ./waf configure --exp planar_cmaes
 ./waf --exp planar_cmaes
+
+cp -av ~/planar_metacmaes/planar_dart/include/planar_dart/bin_locations.txt ${BOTS_DIR}/include/planar_dart/

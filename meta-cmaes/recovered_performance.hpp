@@ -100,7 +100,7 @@ namespace sferes
             {
                                 // set up bins from bin_locations.txt
                 std::vector<Eigen::Vector2d> bin_locations;
-                std::string binfilename = "planar_dart/include/planar_dart/bin_locations.txt";
+                std::string binfilename = std::string(std::getenv("BOTS_DIR")) + "/include/planar_dart/bin_locations.txt";
                 std::cout << "Loading  " << binfilename << std::endl;
                 std::ifstream monFlux(binfilename.c_str());
                 if (monFlux)
