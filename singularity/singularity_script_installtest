@@ -30,5 +30,7 @@ cd $SFERES_DIR
 ./waf distclean
 ./waf configure  --exp planar_cmaes --dart ${BOTS_DIR}
 ./waf  --exp planar_cmaes  --dart ${BOTS_DIR}
+
+cp -av /singularity_home/planar_metacmaes/planar_dart/include/planar_dart/bin_locations.txt ${BOTS_DIR}/include/planar_dart/
  
 
