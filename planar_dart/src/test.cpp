@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     simu.fixed_camera(simu.ISOMETRIC);
 #endif
     simu.run();
-
+    std::cout << simu.final_position() << std::endl;
     std::cout << "Euclidean" << std::endl;
     std::cout << simu.euclidean_distance() << std::endl;
 
