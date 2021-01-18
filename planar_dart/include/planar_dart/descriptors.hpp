@@ -25,8 +25,8 @@ namespace planar_dart
         {
         public:
             using robot_t = std::shared_ptr<planar>;
-            double factor = 0.5425;    // -0.5425 is the largest y-value in skeleton (link 8)
-            double thickness = 0.0775; // thickness of the skeleton
+            double factor = 0.62;    // -0.62 is the largest y-value in skeleton (link 8)
+            //double thickness = 0.0775; // thickness of the skeleton
             template <typename Simu, typename robot>
             void operator()(Simu &simu, std::shared_ptr<robot> rob, const Eigen::Vector6d &init_trans)
             {
@@ -90,7 +90,7 @@ namespace planar_dart
                 _d = sqrt(pow(_x, 2) + pow(_y, 2));
                 _theta = atan2(_y, _x);
                 _theta = _theta <= 0.10 ? _theta + 2. * DOUBLE_PI : _theta;                                                         // 0.10 leaves room for thickness of the robot
-                assert((_y > 0) || (_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor + thickness / 2)); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
+                assert((_y > 0) || (_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor)); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
 
 #ifdef GRAPHIC
                 std::cout << "gripper position " << _posi << std::endl;
@@ -131,9 +131,9 @@ namespace planar_dart
             {
                 _angles = {};
 
-                Eigen::Vector3d _base(0, 0, 0);
+                Eigen::Vector3d _base = rob->joint(0,"jpa")->getWorldPosition();
 
-                for (size_t i = 1; i < JOINT_SIZE;)
+                for (size_t i = 2; i <= JOINT_SIZE;i+=2)
                 {
                     //std::string gripper_index = "joint_" + std::to_string(i+1);
                     //auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
@@ -150,7 +150,6 @@ namespace planar_dart
                     std::cout << "angle " << i << ": " << a << std::endl;
 #endif
                     _base = _posi;
-                    i += 2;
                 }
             }
 
@@ -207,9 +206,9 @@ namespace planar_dart
             {
                 _angles = {};
 
-                Eigen::Vector3d _base(0, 0, 0);
+                Eigen::Vector3d _base = rob->joint(0,"rjpa")->getWorldPosition();
                 _offset_angle = 1.5 * DOUBLE_PI;
-                for (size_t i = 1; i < JOINT_SIZE;)
+                for (size_t i = 1; i < JOINT_SIZE;i+=2)
                 {
                     //std::string gripper_index = "joint_" + std::to_string(i+1);
                     //auto gripper_body = rob->skeleton()->getBodyNode(gripper_index)->createMarker();
@@ -228,7 +227,6 @@ namespace planar_dart
 #endif
                     _offset_angle = JointPairAngle::getRAngle(_base[0], _base[1], _posi[0], _posi[1]);
                     _base = _posi;
-                    i += 2;
                 }
             }
 

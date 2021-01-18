@@ -61,7 +61,7 @@ namespace planar_dart
     {
     public:
         const int ISOMETRIC = 0, TOP = 1;
-        const double MAXDIST = 0.5425;
+        const double MAXDIST = 0.62;
         const double delta = MAXDIST / 15.0;
         using robot_t = std::shared_ptr<planar>;
         // defaults

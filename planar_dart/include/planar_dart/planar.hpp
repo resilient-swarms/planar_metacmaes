@@ -80,6 +80,7 @@ namespace planar_dart {
             _planar->_joint_6_marker = _joint_6_marker; 
             _planar->_joint_7_marker = _joint_7_marker; 
             _planar->_joint_8_marker = _joint_8_marker; 
+            _planar->_joint_9_marker = _joint_9_marker; 
             return _planar;
         }
 
@@ -94,7 +95,7 @@ namespace planar_dart {
         // const Eigen::Vector3d& position = Eigen::Vector3d::Zero(),
         // const Eigen::Vector4d& color = Eigen::Vector4d::Constant(1.0))
         dart::dynamics::Marker* gripper(const std::string& tag){
-            return _skeleton->getBodyNode("link_8")->createMarker(std::string("grippermarker" + tag));
+            return _skeleton->getBodyNode("link_9")->createMarker(std::string("grippermarker" + tag));
         }
 
         dart::dynamics::Marker* joint(int i,const std::string& tag){
@@ -214,7 +215,7 @@ namespace planar_dart {
 
 
         void _set_gripper() {
-            std::string gripper_index = "link_8";
+            std::string gripper_index = "link_9";
             _gripper_body = (_skeleton->getMarker(std::string("gripMarker"))==NULL)?_skeleton->getBodyNode(gripper_index)->createMarker(std::string("gripMarker")):_skeleton->getMarker(std::string("gripMarker"));
 
             _joint_1_marker = (_skeleton->getMarker(std::string("oneMarker"))==NULL)?_skeleton->getBodyNode(std::string("link_1"))->createMarker(std::string("oneMarker")):_skeleton->getMarker(std::string("oneMarker"));
@@ -224,7 +225,8 @@ namespace planar_dart {
             _joint_5_marker = (_skeleton->getMarker(std::string("fiveMarker"))==NULL)?_skeleton->getBodyNode(std::string("link_5"))->createMarker(std::string("fiveMarker")):_skeleton->getMarker(std::string("fiveMarker"));
             _joint_6_marker = (_skeleton->getMarker(std::string("sixMarker"))==NULL)?_skeleton->getBodyNode(std::string("link_6"))->createMarker(std::string("sixMarker")):_skeleton->getMarker(std::string("sixMarker"));
             _joint_7_marker = (_skeleton->getMarker(std::string("sevenMarker"))==NULL)?_skeleton->getBodyNode(std::string("link_7"))->createMarker(std::string("sevenMarker")):_skeleton->getMarker(std::string("sevenMarker"));
-            _joint_8_marker = _gripper_body;
+            _joint_8_marker = (_skeleton->getMarker(std::string("eightMarker"))==NULL)?_skeleton->getBodyNode(std::string("link_8"))->createMarker(std::string("eightMarker")):_skeleton->getMarker(std::string("eightMarker"));
+            _joint_9_marker = _gripper_body;
         }
 
         dart::dynamics::SkeletonPtr _skeleton;
@@ -238,6 +240,7 @@ namespace planar_dart {
         dart::dynamics::Marker* _joint_6_marker;
         dart::dynamics::Marker* _joint_7_marker;
         dart::dynamics::Marker* _joint_8_marker;
+        dart::dynamics::Marker* _joint_9_marker;
     };
 }
 
