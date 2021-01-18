@@ -18,6 +18,9 @@ RESULTS_DIR=$6 # destination folder
 mkdir $RESULTS_DIR
 if [[ $condition_type == meta* ]]; then
 	condition_prefix="damage_meta_"
+	if [[ $fm == nonlinfm* ]]; then
+	     binarytag="_nonlinfm"	
+	fi
 else
 	condition_prefix=$condition_type
 fi
@@ -47,9 +50,8 @@ done
 
 get_last_filename
 echo "max generation found is $max"
-outputdir=$currentdir/$outputdir
-cd /singularity_home/planar_metacmaes/ 
+cd $currentdir 
 echo "am now in $PWD"
-binary=${SFERES_DIR}/build/exp/planar_cmaes/${test_type}_damage_${condition_type}_binary
+binary=${SFERES_DIR}/build/exp/planar_cmaes/${test_type}_damage_${condition_type}${binarytag}_binary
 ${binary} ${replicate_number} --load ${outputdir}/gen_${max} --d ${outputdir} -o ${outputdir}/${test_type}_damage_performance >> ${outputdir}/log_${test_type}.txt	
 
