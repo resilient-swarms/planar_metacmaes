@@ -94,7 +94,7 @@ namespace planar_dart
                 std::cout << "gripper position " << _posi << std::endl;
                 std::cout << "polar coord " << _d << " , " << _theta << std::endl;
 #endif                                                    
-                assert(_y > 0 || _theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor + 0.0375); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
+                assert((_y > 0) || (_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor + 0.0375)); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
 
 
             }
