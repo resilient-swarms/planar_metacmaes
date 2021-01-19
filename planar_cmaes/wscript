@@ -146,20 +146,7 @@ def _build_evolution(bld):
 	featuremaps = {0: 'linfm',1: 'selectionfm', 2: 'nonlinfm'}
 	if os.environ.get('BUILD_TYPE',"False") == "damage_meta":
 		for key, val in featuremaps.items():
-			if ADDITIONAL_GENES == 0:
-				sferes.create_variants(bld,
-									source = 'planarCMAES.cpp',
-									use = 'sferes2',
-									uselib = libs,
-									target = 'planarCMAES_damage_meta_'+val,
-									cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
-									"-DEXPERIMENT_TYPE=0",
-									"-DNUM_CORES="+str(num_cores),
-									"-DFEATUREMAP="+str(key),
-									"-DADDITIONAL_GENES="+ADDITIONAL_GENES],   # -march=native
-									variants = ['BINARY'])
-			else:
-				sferes.create_variants(bld,
+			sferes.create_variants(bld,
 									source = 'planarCMAES.cpp',
 									use = 'sferes2',
 									uselib = libs,
@@ -169,6 +156,20 @@ def _build_evolution(bld):
 									"-DNUM_CORES="+str(num_cores),
 									"-DFEATUREMAP="+str(key),
 									"-DADDITIONAL_GENES="+ADDITIONAL_GENES],   # -march=native
+									variants = ['BINARY'])
+	elif os.environ.get('BUILD_TYPE',"False") == "nodamage_meta":
+		for key, val in featuremaps.items():
+			sferes.create_variants(bld,
+									source = 'planarCMAES.cpp',
+									use = 'sferes2',
+									uselib = libs,
+									target = 'planarCMAES_nodamage_meta_'+val+"_added"+ADDITIONAL_GENES+"genes",
+									cxxflags = cxxflags + ['-march=native',"-DBEHAV_DIM=4",
+									"-DEXPERIMENT_TYPE=0",
+									"-DNUM_CORES="+str(num_cores),
+									"-DFEATUREMAP="+str(key),
+									"-DADDITIONAL_GENES="+ADDITIONAL_GENES,
+									"-DNO_DAMAGE_METAFIT"],   # -march=native
 									variants = ['BINARY'])
 
 	elif os.environ.get('BUILD_TYPE',"False") == "random": 
