@@ -55,7 +55,7 @@ struct BottomParams
         // number of generations
         SFERES_CONST unsigned nb_gen = 250001; // at most 20,000 evaluations for each of 500 meta-generations for meta-learning --> 10M evals (take a bit more just in case there is time enough)
         // how often should the result file be written (here, each 250 generations == 100,000 ; on 16-cores is every 1-2 hours)
-        SFERES_CONST int dump_period = 1000; //20
+        SFERES_CONST int dump_period = 10000; //20
 #endif
         // NOTE: multiply size by 2 to obtain the actual batch ! !
         SFERES_CONST unsigned size = 200; //---> 400 individuals; note this is the size per map, for each bottom generation (total of 10,000 evals for bottom-level)
