@@ -89,13 +89,14 @@ namespace planar_dart
                 double _y = gripper->getPosition(1);*/
                 _d = sqrt(pow(_x, 2) + pow(_y, 2));
                 _theta = atan2(_y, _x);
-                _theta = _theta <= 0.10 ? _theta + 2. * DOUBLE_PI : _theta;                                                         // 0.10 leaves room for thickness of the robot
-                assert((_y > 0) || (_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor)); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
-
+                _theta = _theta <= 0.10 ? _theta + 2. * DOUBLE_PI : _theta;     
 #ifdef GRAPHIC
                 std::cout << "gripper position " << _posi << std::endl;
                 std::cout << "polar coord " << _d << " , " << _theta << std::endl;
-#endif
+#endif                                                    
+                assert(_theta <= 2 * DOUBLE_PI + 0.10 && _theta >= DOUBLE_PI - 0.10 && _d <= factor + 0.0375); //either illegal move to wall or d in factor and theta [DOUBLE_PI,2DOUBLE_PI]
+
+
             }
 
             void get(std::vector<double> &results)
