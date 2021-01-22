@@ -206,10 +206,10 @@ namespace planar_dart
             }
             _final_pos = rob->gripper("final_pos")->getWorldPosition().head(2);
 #ifdef TEST
-
-#endif
-
+            std::vector<double> normalised_angles = _controller.get_final_commands();
+#else
             std::vector<double> normalised_angles = _controller.parameters();
+#endif
             double _mean_angles = 0.0;
             for (size_t i = 0; i < JOINT_SIZE; ++i)
             {

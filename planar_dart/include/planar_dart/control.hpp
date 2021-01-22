@@ -102,11 +102,11 @@ namespace planar_dart
 
             std::vector<double> values = parameters();
 
-            std::vector<double> tcommands(JOINT_COUNT, 0);
-
             size_t dof = _robot->skeleton()->getNumDofs();
             Eigen::VectorXd commands = Eigen::VectorXd::Zero(dof);
-
+#ifdef TEST
+            _final_commands = std::vector<double>(dof);// commands before conversion to radians, accounting for damages
+#endif
             for (size_t i = 0; i < JOINT_COUNT; ++i)
             {
                 // for those legs not removed, add the command
@@ -114,6 +114,9 @@ namespace planar_dart
                 if (it != _stuck_legs.end())
                 {
                     //tcommands[i] = values[i];
+#ifdef TEST
+                    _final_commands[i] = _stuck_legs[i];
+#endif
                     commands[i] = toRadians(_stuck_legs[i]);
                 }
                 // indicate removed legs with an stuck value
@@ -122,12 +125,18 @@ namespace planar_dart
                     it = _offset_legs.find(i);
                     if (it != _offset_legs.end())
                     {
-                        commands[i] = std::max(0.0,std::min(1.0,_offset_legs[i] + values[i]));
+                        commands[i] = std::max(0.0, std::min(1.0, _offset_legs[i] + values[i]));
+#ifdef TEST
+                        _final_commands[i] = commands[i];
+#endif
                         commands[i] = toRadians(commands[i]);
                     }
                     else
                     {
                         //tcommands[i] = values[i];
+#ifdef TEST
+                        _final_commands[i] = values[i];
+#endif
                         commands[i] = toRadians(values[i]);
                     }
                 }
@@ -150,6 +159,12 @@ namespace planar_dart
 
             return ((MAX - MIN) * val) + MIN;
         }
+#ifdef TEST
+        std::vector<double> get_final_commands()
+        {
+            return _final_commands;
+        }
+#endif
 
     protected:
         std::vector<double> _ctrl;
@@ -158,6 +173,9 @@ namespace planar_dart
         std::map<int, double> _stuck_legs;
         std::map<int, double> _offset_legs;
         int _leg_count;
+#ifdef TEST
+        std::vector<double> _final_commands;
+#endif
     };
 } // namespace planar_dart
 

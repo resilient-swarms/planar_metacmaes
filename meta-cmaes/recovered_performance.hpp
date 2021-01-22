@@ -19,7 +19,7 @@ namespace sferes
         struct RecoveredPerformance
         {
 
-            static std::tuple<int, Eigen::VectorXd, bool> _eval_single_envir(const Phen &indiv, size_t damage_option, const std::vector<Eigen::Vector2d>& bin_locations)
+            static std::tuple<int, Eigen::VectorXd, bool, double> _eval_single_envir(const Phen &indiv, size_t damage_option, const std::vector<Eigen::Vector2d>& bin_locations)
             {
 
                 // copy of controller's parameters
@@ -49,7 +49,8 @@ namespace sferes
                 int bin_index = simu.find_bin(bin_locations);
                 Eigen::VectorXd pos = simu.final_position();
                 bool dead = simu.dead();
-                return std::tuple<int, Eigen::VectorXd, bool>{bin_index, pos, dead};
+                double nega_var = simu.performance_val();
+                return std::tuple<int, Eigen::VectorXd, bool, double>{bin_index, pos, dead, nega_var};
             }
 
             static float _eval_all(const Phen &indiv)
@@ -124,24 +125,29 @@ namespace sferes
                 }
                 for (size_t damage_option = 0; damage_option < global::damage_sets.size(); ++damage_option)
                 {
+		    double avg_fit = 0.0;
+                    size_t num_solutions = 0;
                     std::set<int> unique_bins;
                     std::vector<Eigen::VectorXd> positions;
                     for (const bottom_indiv_t *k = archive.data(); k < (archive.data() + archive.num_elements()); ++k)
                     {
                         if (*k)
                         {
-                            std::tuple<int, Eigen::VectorXd, bool> tup = sferes::fit::RecoveredPerformance<Phen>::_eval_single_envir(**k, damage_option,bin_locations);
+                            std::tuple<int, Eigen::VectorXd, bool, double> tup = sferes::fit::RecoveredPerformance<Phen>::_eval_single_envir(**k, damage_option,bin_locations);
                             bool dead = std::get<2>(tup);
                             if (!dead)
                             {
-                                int index = std::get<0>(tup);
-                                unique_bins.insert(index);
-                                Eigen::VectorXd pos = std::get<1>(tup);
-                                positions.push_back(pos);
+		                    int index = std::get<0>(tup);
+		                    unique_bins.insert(index);
+		                    Eigen::VectorXd pos = std::get<1>(tup);
+		                    positions.push_back(pos);
+		                    avg_fit += std::get<3>(tup);
+		                    ++num_solutions;
                             }
                         }
                     }
-                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions) << std::endl;
+		    avg_fit = avg_fit / (float) num_solutions;
+                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions)<< " " << avg_fit << std::endl;
                 }
 
                 os << "END TEST META-INDIVIDUAL" << std::endl;
@@ -187,13 +193,16 @@ namespace sferes
                 {
                     throw std::runtime_error("could not find " + binfilename);
                 }
+
                 for (size_t damage_option = 0; damage_option < global::damage_sets.size(); ++damage_option)
                 {
+                    double avg_fit = 0.0;
+                    size_t num_solutions = 0;
                     std::set<int> unique_bins;
                     std::vector<Eigen::VectorXd> positions;
                     for (size_t k = 0; k < archive.size(); ++k)
                     {
-                        std::tuple<int, Eigen::VectorXd, bool> tup = sferes::fit::RecoveredPerformance<Phen>::_eval_single_envir(*archive[k], damage_option,bin_locations);
+                        std::tuple<int, Eigen::VectorXd, bool, double> tup = sferes::fit::RecoveredPerformance<Phen>::_eval_single_envir(*archive[k], damage_option,bin_locations);
                         bool dead = std::get<2>(tup);
                         if (!dead)
                         {
@@ -201,9 +210,12 @@ namespace sferes
                             unique_bins.insert(index);
                             Eigen::VectorXd pos = std::get<1>(tup);
                             positions.push_back(pos);
+                            avg_fit += std::get<3>(tup);
+                            ++num_solutions;
                         }
                     }
-                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions) << std::endl;
+                    avg_fit = avg_fit / (float) num_solutions;
+                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions)<< " " << avg_fit << std::endl;
                 }
             }
             // assess maximal recovery for each damage separately
