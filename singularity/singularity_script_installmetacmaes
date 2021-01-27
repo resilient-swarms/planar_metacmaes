@@ -29,6 +29,16 @@ cd $SFERES_DIR
 ./waf distclean
 ./waf configure  --exp planar_cmaes --dart ${BOTS_DIR}
 ./waf  --exp planar_cmaes  --dart ${BOTS_DIR}
+
+
+export BUILD_TYPE=nodamage_meta
+./waf configure --prefix=$BOTS_DIR
+./waf
+./waf install
+
+cd $SFERES_DIR
+./waf configure  --exp planar_cmaes --dart ${BOTS_DIR}
+./waf  --exp planar_cmaes  --dart ${BOTS_DIR}
  
  # build random
 export BUILD_TYPE=random
@@ -49,5 +59,16 @@ cd $HOME_CONTAINER/planar_metacmaes/planar_dart
 cd $SFERES_DIR
 ./waf configure --exp planar_cmaes --dart ${BOTS_DIR}
 ./waf --exp planar_cmaes --dart ${BOTS_DIR}
+
+# build test
+export BUILD_PHASE=TEST
+./waf configure --prefix=$BOTS_DIR
+./waf
+./waf install
+
+cd $SFERES_DIR
+./waf configure  --exp planar_cmaes --dart ${BOTS_DIR}
+./waf  --exp planar_cmaes  --dart ${BOTS_DIR}
+
 
 cp -av /singularity_home/planar_metacmaes/planar_dart/include/planar_dart/bin_locations.txt ${BOTS_DIR}/include/planar_dart/
