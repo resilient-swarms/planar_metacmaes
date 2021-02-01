@@ -147,7 +147,7 @@ namespace sferes
                         }
                     }
                     avg_fit = avg_fit / (float)num_solutions;
-                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions) << " " << avg_fit << std::endl;
+                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions) << " " << avg_fit << " " << num_solutions << std::endl;
                 }
 
                 os << "END TEST META-INDIVIDUAL" << std::endl;
@@ -215,7 +215,7 @@ namespace sferes
                         }
                     }
                     avg_fit = avg_fit / (float)num_solutions;
-                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions) << " " << avg_fit << std::endl;
+                    os << unique_bins.size() << " " << sferes::fit::PairwiseDist<Phen>::compute(positions) << " " << avg_fit << " " << num_solutions << std::endl;
                 }
             }
             // assess maximal recovery for each damage separately
